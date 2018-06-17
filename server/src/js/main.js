@@ -18,7 +18,7 @@ module.exports = class Server{
             PORT = process.argv[2];
         }
         
-        server.use(express.static(path.join("dist")));
+        server.use(express.static(path.join("./webapp/dist")));
 
         server.listen(PORT, () => {console.log("HTTP Server listening on port %d.", PORT)});
     }
