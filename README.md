@@ -2,11 +2,7 @@
 
 Anwendung des npm-Build-Prozesses
 -----------------------------
-Im Ordner webapp ist eine package.json, die den Build-Prozess für den webapp-Ordner ausführt.
-Hier kann z.b npm run build für die Client-Anwendung ausgeführt werden.
-
-Im Äußersten Ordner ist eine package.json, die den Build-Prozess für den server-Ordner ausführt.
-Hier kann z.B. npm run start oder npm run build für den Server ausgeführt werden.
+Im package.json sind alle Build-Prozesse definiert. Es werden beide Ordner (server, webapp) zusammen gebuildet.
 
 Installation der Module
 -----------------------
