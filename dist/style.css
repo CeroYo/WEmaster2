@@ -1,0 +1,18 @@
+body {
+  font-size: 1em;
+}
+.header {
+  text-align: center;
+}
+.sitzungsliste-table {
+  width: 100%;
+}
+.center {
+  justify-content: center;
+}
+.pure-g {
+  display: flex;
+}
+.pure-button {
+  width: 100%;
+}

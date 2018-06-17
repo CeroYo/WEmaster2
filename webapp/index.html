@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="style.css" >
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<title>Amateurastronomische Beobachtungssitzungen</title>
+	</head>
+	<body>
+		<div class="header">
+			<h1>Amateurastronomische Beobachtungssitzungen</h1>
+		</div>
+		<main id="output" class="pure-g center">
+			<div class="sitzungsliste pure-u-1 pure-u-md-3-5 pure-u-lg-3-5">
+				<table class="sitzungsliste-table pure-table pure-table-horizontal pure-table-striped">
+					<thead><tr><th>Sitzung</th><th>Datum</th></tr></thead>
+					<tr><td>Meine erste Sitzung</td><td>10.06.2018</td></tr>
+					<tr><td>Meine zweite Sitzung</td><td>12.05.2018</td></tr>
+					<tr><td>Meine dritte Sitzung</td><td>16.05.2018</td></tr>
+					<tr><td>Meine vierte Sitzung</td><td>02.06.2018</td></tr>
+					<tr><td>Meine fünfte Sitzung</td><td>10.06.2018</td></tr>
+					<tr><td>Meine sechste Sitzung</td><td>12.06.2018</td></tr>
+					<tr><td>Meine siebte Sitzung</td><td>15.06.2018</td></tr>
+				</table>
+			</div>
+			<div class="bearbeitungSitzungsliste pure-u-1 pure-u-md-2-5 pure-u-lg-2-5">
+				<form method="post">
+					<input type="button" name="sitzung-anlegen" value="Sitzung anlegen" class="pure-button" /><br />
+					<input type="button" name="sitzung-loeschen" value="Sitzung l&ouml;schen" class="pure-button" /><br />
+					<input type="button" name="sitzung-bearbeiten" value="Sitzungseigenschaft bearbeiten" class="pure-button" /><br />
+					<input type="button" name="objekt-hinzufuegen" value="Beobachtungsobjekt hinzuf&uuml;gen" class="pure-button"/><br />
+					<input type="button" name="objekt-loeschen" value="Beobachtungsobjekt l&ouml;schen" class="pure-button" /><br />
+					<input type="button" name="kartendienst" value="Sitzungsort anzeigen" class="pure-button" /><br />
+					<input type="button" name="sitzung-drucken" value="Sitzung drucken" class="pure-button" /><br />
+				</form>
+			</div>
+		</main>
+		<div class="footer">
+
+		</div>
+		<script src="main.js"></script>
+	</body>
+</html>
