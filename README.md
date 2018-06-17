@@ -30,6 +30,9 @@ place -> Ersetzung von Dateien
 npm install express
 express -> Wrapper für HTTP-Server
 
+npm install -save-dev mkdirp
+mkdirp -> Erstellen von Ordnern in Unterordner
+
 npm als Build-Tool
 ------------------
 npm run BEFEHL immer im Verzeichnis "webapp" oder "server" ausführen
