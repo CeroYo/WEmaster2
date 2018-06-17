@@ -6,11 +6,11 @@ class Server {
 	constructor() {
 		let PORT = 8080;
 
-		if (!isNaN(process.argv[3])) {
-			PORT = process.argv[3];
+		if (!isNaN(process.argv[2])) {
+			PORT = process.argv[2];
 		}
 
-		server.use(express.static(path.join(process.argv[2])));
+		server.use(express.static(path.join("./webapp/dist")));
 
 		server.listen(PORT, () => { console.log("HTTP Server listening on port %d.", PORT); });
 	}
