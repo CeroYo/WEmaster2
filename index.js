@@ -1,4 +1,4 @@
 (() => {
-	const Server = require("./server/js/Main.js");
+	const Server = require("./server/src/js/Main.js");
 	let server = new Server();
 })();

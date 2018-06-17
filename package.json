@@ -2,33 +2,32 @@
     "name": "webapp",
     "main": "index.js",
     "dependencies": {
-        "lib": "^3.0.2"
-    },
-    "devDependencies": {
         "babel-minify": "latest",
         "browserify": "latest",
         "eslint": "latest",
         "express": "^4.16.3",
         "less": "latest",
         "less-plugin-clean-css": "latest",
+        "lib": "^3.0.2",
         "mocha": "latest",
         "place": "latest"
     },
+    "devDependencies": {},
     "scripts": {
         "start": "node index.js",
         "clean": "npm run clean:dist && rm -rf node_modules",
-        "clean:dist": "rm -rf dist",
+        "clean:dist": "rm -rf webapp/dist",
         "lint": "eslint -c .eslintrc.json js/**",
         "test": "mocha server/test/test",
-        "debug": "npm run clean:dist && install && mkdir dist && npm run static && npm run css && npm run js",
-        "build": "npm run clean && npm install && mkdir dist && npm run static:min && npm run css:min && npm run js:min",
-        "static": "cp -r webapp/assets/. dist && cp webapp/index.html dist",
-        "static:min": "npm run static && place dist/index.html style.css style.min.css && place dist/index.html main.js main.min.js",
-        "css": "lessc webapp/styles/style.less dist/style.css",
-        "css:min": "lessc --clean-css webapp/styles/style.less dist/style.min.css",
+        "debug": "npm run clean && npm install && mkdir ./webapp/dist && npm run static && npm run css && npm run js",
+        "build": "npm run clean && npm install && mkdir ./webapp/dist && npm run static:min && npm run css:min && npm run js:min",
+        "static": "cp -r webapp/src/assets/. webapp/dist && cp webapp/index.html webapp/dist",
+        "static:min": "npm run static && place webapp/dist/index.html style.css style.min.css && place webapp/dist/index.html main.js main.min.js",
+        "css": "lessc webapp/src/styles/style.less webapp/dist/style.css",
+        "css:min": "lessc --clean-css webapp/src/styles/style.less webapp/dist/style.min.css",
         "prejs": "npm install lib && npm run lint && npm test",
-        "js": "browserify webapp/js/Main.js > dist/main.js",
-        "js:min": "npm run js && babel-minify dist/main.js > dist/main.min.js",
-        "postjs:min": "rm -f dist/main.js"
+        "js": "browserify webapp/src/js/main.js > webapp/dist/main.js",
+        "js:min": "npm run js && babel-minify webapp/dist/main.js > webapp/dist/main.min.js",
+        "postjs:min": "rm -f webapp/dist/main.js"
     }
 }
