@@ -2,11 +2,13 @@
     "name": "webapp",
     "dependencies": {
         "eslint": "latest",
-        "express": "^4.16.3",
+        "express": "latest",
         "lib": "^3.0.2",
         "mocha": "latest"
     },
-    "devDependencies": {},
+    "devDependencies": {
+        "mkdirp": "latest"
+    },
     "scripts": {
         "start": "node server/src/js/main.js ./webapp/dist",
         "clean": "npm run clean:dist && rm -rf node_modules",
@@ -14,7 +16,7 @@
         "lint": "eslint -c .eslintrc.json server/src/js/**",
         "test": "mocha server/test/test",
         "debug": "npm run clean && npm install",
-        "build": "npm run clean && npm install && mkdir ./server/dist && npm run js:min",
+        "build": "npm run clean && npm install && mkdirp ./server/dist && npm run js:min",
         "prejs": "npm install lib && npm run lint && npm test",
         "js": "browserify server/src/js/main.js > server/dist/main.js",
         "js:min": "npm run js && babel-minify server/dist/main.js > server/dist/main.min.js",
