@@ -1,16 +1,16 @@
 {
   "name": "webapp",
   "dependencies": {
-    "mkdirp": "latest"
+    "lib": "^3.0.2"
   },
   "devDependencies": {
+    "mkdirp": "latest",
     "babel-minify": "latest",
     "browserify": "latest",
     "eslint": "latest",
     "express": "^4.16.3",
     "less": "latest",
     "less-plugin-clean-css": "latest",
-    "lib": "^3.0.2",
     "mocha": "latest",
     "place": "latest"
   },
@@ -18,9 +18,9 @@
     "start": "node server/src/js/main.js",
     "clean": "npm run clean:dist && rm -rf node_modules",
     "clean:dist": "rm -rf server/dist && rm -rf webapp/dist",
-    "lint": "eslint -c .eslintrc.json server/src/js/** && eslint -c .eslintrc.json webapp/src/js/**",
+    "lint": "eslint -c .eslintrc.json server/src/js/* && eslint -c .eslintrc.json webapp/src/js/* && eslint -c .eslintrc.json server/test/** && eslint -c .eslintrc.json webapp/test/**",
     "test": "mocha server/test/test && mocha webapp/test/test",
-    "debug": "npm run clean && npm install --production && mkdirp server/dist && mkdirp webapp/dist && npm run static && npm run css && npm run js",
+    "debug": "npm run clean && npm install && mkdirp server/dist && mkdirp webapp/dist && npm run static && npm run css && npm run js",
     "build": "npm run clean && npm install && mkdirp ./server/dist && mkdirp ./webapp/dist && npm run static:min && npm run css:min && npm run js:min",
     "static": "cp -r webapp/src/assets/. webapp/dist && cp webapp/index.html webapp/dist",
     "static:min": "npm run static && place webapp/dist/index.html style.css style.min.css && place webapp/dist/index.html main.js main.min.js",
