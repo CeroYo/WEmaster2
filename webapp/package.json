@@ -1,0 +1,33 @@
+{
+    "name": "webapp",
+    "main": "index.js",
+    "dependencies": {
+        "babel-minify": "latest",
+        "browserify": "latest",
+        "eslint": "latest",
+        "express": "^4.16.3",
+        "less": "latest",
+        "less-plugin-clean-css": "latest",
+        "lib": "^3.0.2",
+        "mocha": "latest",
+        "place": "latest"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "start": "node index.js",
+        "clean": "npm run clean:dist && rm -rf node_modules",
+        "clean:dist": "rm -rf dist",
+        "lint": "eslint -c .eslintrc.json js/**",
+        "test": "mocha ../server/test/test",
+        "debug": "npm run clean && npm install && mkdir dist && npm run static && npm run css && npm run js",
+        "build": "npm run clean && npm install && mkdir dist && npm run static:min && npm run css:min && npm run js:min",
+        "static": "cp -r src/assets/. dist && cp index.html dist",
+        "static:min": "npm run static && place dist/index.html style.css style.min.css && place dist/index.html main.js main.min.js",
+        "css": "lessc src/styles/style.less dist/style.css",
+        "css:min": "lessc --clean-css src/styles/style.less dist/style.min.css",
+        "prejs": "npm install lib && npm run lint && npm test",
+        "js": "browserify src/js/main.js > dist/main.js",
+        "js:min": "npm run js && babel-minify dist/main.js > dist/main.min.js",
+        "postjs:min": "rm -f dist/main.js"
+    }
+}
