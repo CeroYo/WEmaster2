@@ -1,5 +1,13 @@
 # Web-Entwicklung
 
+Anwendung des npm-Build-Prozesses
+-----------------------------
+Im Ordner webapp ist eine package.json, die den Build-Prozess für den webapp-Ordner ausführt.
+Hier kann z.b npm run build für die Client-Anwendung ausgeführt werden.
+
+Im Äußersten Ordner ist eine package.json, die den Build-Prozess für den server-Ordner ausführt.
+Hier kann z.B. npm run start oder npm run build für den Server ausgeführt werden.
+
 Installation der Module
 -----------------------
 
@@ -32,11 +40,3 @@ express -> Wrapper für HTTP-Server
 
 npm install -save-dev mkdirp
 mkdirp -> Erstellen von Ordnern in Unterordner
-
-npm als Build-Tool
-------------------
-npm run BEFEHL immer im Verzeichnis "webapp" oder "server" ausführen
-
-npm run debug -> Durchläuft Build-Prozess ohne die Dateien zu minifizieren
-
-npm run build -> Durchläuft kompletten Build-Prozess
