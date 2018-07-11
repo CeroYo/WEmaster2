@@ -1,19 +1,17 @@
-const express = require("express");
-const path = require("path");
-let server = express();
+/* -------- BEGIN IMPORTS -------- */
+//Schnittstelle des Servers
+const Server = require("./Server");
 
-class Server {
-	constructor() {
-		let PORT = 8080;
+//Bieten Funktionen zum Speichern und Löschen von Sessions
+const SessionManager = require("./SessionManager");
 
-		//Überschreibt den Standardport Port 8080, falls beim Aufruf des Start-Scripts ein neuer als Parameter übergeben wurde (z. B. npm run start 2525)
-		if (!isNaN(process.argv[2])) {
-			PORT = process.argv[2];
-		}
+//Objekt für eine Beobachtungsession
+const ObservingSession = require("./ObservingSession");
 
-		server.use(express.static(path.join("./webapp/dist")));
+/* -------- BEGIN CODE -------- */
+let server = new Server();
+server.start();
 
-		server.listen(PORT, () => { console.log("HTTP Server listening on port %d.", PORT); });
-	}
-}
-let serverx = new Server();
+//Es wird nur ein Objekt benötig, dieses liest am Anfang einmalig Daten aus der Datei
+//und schreibt dann immer Änderungen in die Datei.
+let sessions = new SessionManager();

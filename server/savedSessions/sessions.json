@@ -1,0 +1,23 @@
+{
+    "lastEdited": "2018-07-11T15:28:29.556Z",
+    "data": [
+        {
+            "name": "myname23",
+            "date": "2018-11-06T23:00:00.000Z",
+            "location": "mylocation23",
+            "observingObjects": "myObservingObject2"
+        },
+        {
+            "name": "myname23",
+            "date": "2018-11-06T23:00:00.000Z",
+            "location": "mylocation23",
+            "observingObjects": "myObservingObject2"
+        },
+        {
+            "name": "myname237777",
+            "date": "2018-11-06T23:00:00.000Z",
+            "location": "mylocation23",
+            "observingObjects": "myObservingObject2"
+        }
+    ]
+}
