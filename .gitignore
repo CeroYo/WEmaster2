@@ -1,6 +1,5 @@
-# Don't track content of these folders
+# Don't track content of these folders/files
 node_modules/
-webapp/node_modules
 webapp/dist
 server/dist
 .vscode
