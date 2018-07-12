@@ -1,0 +1,24 @@
+{
+	"observingSession": {
+		"name": "myName",
+		"date": "myDate",
+		"location": "myLocation",
+		"observingObjects": "url"
+	},
+	"_links": {
+		"self": {
+			"href": "http://localhost:8080/sessions/:id"
+		},
+		"list": {
+			"href": "http://localhost:8080/sessions"
+		},
+		"update": {
+			"method": "PUT",
+			"href": "http://localhost:8080/sessions/:id"
+		},
+		"delete": {
+			"method": "DELETE",
+			"href": "http://localhost:8080/sessions/:id"
+		}
+	}
+}
