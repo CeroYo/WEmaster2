@@ -33,13 +33,15 @@ class ObservingObjects {
 	}
 
 	getBySessionId(sessionId) {
-		let returnArray = [];
-		for (let object in this.observingObjects) {
-			if (object.sessionId === sessionId) {
-				returnArray.push(object);
+		let returnObject = {};
+		for (let key in this.observingObjects) {
+			if (!this.observingObjects.hasOwnProperty(key)) { continue; }
+
+			if (parseInt(this.observingObjects[key].sessionId) === parseInt(sessionId)) {
+				returnObject[key] = this.observingObjects[key];
 			}
 		}
-		return returnArray;
+		return returnObject;
 	}
 
 	get(id) {
@@ -60,16 +62,15 @@ class ObservingObjects {
 		let objectToSave = {
 			observingObject: {
 				session: {
-					href: `${BASE_URI}/observingObjects/${this.id}`
+					href: `${BASE_URI}/sessions/${sessionId}`
 				},
 				name: `${name}`
 			}
 		};
 		this.saveObject(OBJECT_PATH + this.id + ".json", JSON.stringify(objectToSave, null, 4));
 
-		//TODO: Cannot set property '3' of undefined
 		this.observingObjects[this.id] = {
-			href: OBJECT_PATH + this.id + ".json",
+			href: `${BASE_URI}/observingObject/${this.id}`,
 			sessionId: sessionId
 		};
 		this.id++;
@@ -94,9 +95,16 @@ class ObservingObjects {
 	}
 
 	delete(id) {
+		console.log("Deleting " + id);
 		delete this.observingObjects[id];
-		this.saveObject(OBJECTS_PATH, JSON.stringify(this.observingObjects));
+		this.id--;
+		let objectsToSave = {
+			id: this.id,
+			observingObjects: this.observingObjects
+		};
+		this.saveObject(OBJECTS_PATH, JSON.stringify(objectsToSave, null, 4));
 		fs.unlinkSync(OBJECT_PATH + id + ".json");
+		console.log("Deleting finished");
 	}
 
 	saveObject(path, data) {

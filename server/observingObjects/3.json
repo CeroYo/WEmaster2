@@ -1,8 +1,0 @@
-{
-    "observingObject": {
-        "session": {
-            "href": "http://localhost:8080/observingObjects/3"
-        },
-        "name": "blub"
-    }
-}

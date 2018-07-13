@@ -1,5 +1,5 @@
 {
-    "id": 5,
+    "id": 3,
     "sessions": {
         "0": {
             "href": "http://localhost:8080/sessions/0"
@@ -9,18 +9,15 @@
         },
         "2": {
             "href": "http://localhost:8080/sessions/2"
-        },
-        "4": {
-            "href": "http://http://localhost:8080/sessions/4"
         }
     },
     "_links": {
         "self": {
-            "href": "http://http://localhost:8080/sessions"
+            "href": "http://localhost:8080/sessions"
         },
         "create": {
             "method": "POST",
-            "href": "http://http://localhost:8080/sessions"
+            "href": "http://localhost:8080/sessions"
         }
     }
 }

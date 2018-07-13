@@ -21,7 +21,7 @@ class Sessions {
 		try {
 			let readData = fs.readFileSync(SESSIONS_PATH);
 			this.sessions = JSON.parse(readData).sessions;
-			this.id = JSON.parse(readData).id + 1;
+			this.id = JSON.parse(readData).id;
 
 			console.log("Daten gelesen.");
 		}
@@ -39,8 +39,9 @@ class Sessions {
 			// skip loop if the property is from prototype
 			if (!this.sessions.hasOwnProperty(key)) { continue; }
 
-			if (key === id) {
+			if (parseInt(key) === id) {
 				try {
+					console.log("bin-drin");
 					let session = JSON.parse(fs.readFileSync(SESSION_PATH + id + ".json"));
 					return session;
 				}
@@ -58,6 +59,7 @@ class Sessions {
 
 	//Erzeugt neue Session; Noch nicht betrachtet wenn Daten gleich sind
 	create(name, date, location, observingObjects) {
+		let currentId = this.id;
 		let sessionToSave = {
 			session: {
 				name: `${name}`,
@@ -66,45 +68,43 @@ class Sessions {
 			},
 			_links: {
 				self: {
-					href: `http://${BASE_URI}/sessions/:id`
+					href: `${BASE_URI}/sessions/:id`
 				},
 				list: {
-					href: `http://${BASE_URI}/sessions`
+					href: `${BASE_URI}/sessions`
 				},
 				update: {
 					method: "PUT",
-					href: `http://${BASE_URI}/sessions/:id`
+					href: `${BASE_URI}/sessions/:id`
 				},
 				delete: {
 					method: "DELETE",
-					href: `http://${BASE_URI}/sessions/:id`
+					href: `${BASE_URI}/sessions/:id`
 				}
 			}
 		};
-		this.saveSession(SESSION_PATH + this.id + ".json", JSON.stringify(sessionToSave, null, 4));
+		this.saveSession(SESSION_PATH + currentId + ".json", JSON.stringify(sessionToSave, null, 4));
 
-		this.sessions[this.id] = { href: `http://${BASE_URI}/sessions/${this.id}` };
+		this.sessions[currentId] = { href: `${BASE_URI}/sessions/${currentId}` };
 		this.id++;
 		let sessionsToSave = {
 			id: this.id,
 			sessions: this.sessions,
 			_links: {
 				self: {
-					href: `http://${BASE_URI}/sessions`
+					href: `${BASE_URI}/sessions`
 				},
 				create: {
 					method: "POST",
-					href: `http://${BASE_URI}/sessions`
+					href: `${BASE_URI}/sessions`
 				}
 			}
 		};
 		this.saveSession(SESSIONS_PATH, JSON.stringify(sessionsToSave, null, 4));
 
-		//for (let objectName in observingObjects) {
-		ObservingObject.create(this.id, observingObjects);
-		//}
+		ObservingObject.create(currentId, observingObjects);
 
-		return this.id;
+		return currentId;
 	}
 
 	update(id, name, date, location, observingObjects) {
@@ -114,10 +114,26 @@ class Sessions {
 
 	delete(id) {
 		delete this.sessions[id];
-		for (let object in ObservingObject.getBySessionId(id)) {
-			ObservingObject.delete(object.id);
+		this.id--;
+		let sessionsToSave = {
+			id: this.id,
+			sessions: this.sessions,
+			_links: {
+				self: {
+					href: `${BASE_URI}/sessions`
+				},
+				create: {
+					method: "POST",
+					href: `${BASE_URI}/sessions`
+				}
+			}
+		};
+		this.saveSession(SESSIONS_PATH, JSON.stringify(sessionsToSave, null, 4));
+		fs.unlinkSync(SESSION_PATH + id + ".json");
+		let objects = ObservingObject.getBySessionId(id);
+		for (let key in objects) {
+			ObservingObject.delete(key);
 		}
-		this.saveSession();
 	}
 
 	saveSession(path, data) {
