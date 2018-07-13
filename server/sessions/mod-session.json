@@ -1,9 +1,8 @@
 {
-	"observingSession": {
+	"session": {
 		"name": "myName",
 		"date": "myDate",
-		"location": "myLocation",
-		"observingObjects": "url"
+		"location": "myLocation"
 	},
 	"_links": {
 		"self": {

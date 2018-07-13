@@ -1,0 +1,23 @@
+{
+	"id": 3,
+	"sessions": {
+		"0": {
+			"href": "http://localhost:8080/sessions/0"
+		},
+		"1": {
+			"href": "http://localhost:8080/sessions/1"
+		},
+		"2": {
+			"href": "http://localhost:8080/sessions/2"
+		}
+	},
+	"_links": {
+		"self": {
+			"href": "http://localhost:8080/sessions"
+		},
+		"create": {
+			"method": "POST",
+			"href": "http://localhost:8080/sessions"
+		}
+	}
+}

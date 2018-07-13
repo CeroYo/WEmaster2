@@ -1,28 +1,54 @@
 const fs = require("fs");
-const ObservingSession = require("./ObservingSession");
-const FILE = "./server/savedSessions/mod-sessions.json";
+const observingObject = require("./ObservingObjects");
+const SESSIONS_PATH = "./server/savedSessions/sessions.json";
+const SESSION_PATH = "./server/savedSessions/";
+const OBSERVING_OBJECTS_PATH = "./server/observingObject/observingObject.json";
+const OBSERVING_OBJECT_PATH = "./server/observingObject/";
+const SESSION_LINKS = {
+	self: {
+		href: "http://localhost:8080/sessions/:id"
+	},
+	list: {
+		href: "http://localhost:8080/sessions"
+	},
+	update: {
+		method: "PUT",
+		href: "http://localhost:8080/sessions/:id"
+	},
+	delete: {
+		method: "DELETE",
+		href: "http://localhost:8080/sessions/:id"
+	}
+};
+
+const SESSIONS_LINKS = {
+	self: {
+		href: "http://localhost:8080/sessions"
+	},
+	create: {
+		method: "POST",
+		href: "http://localhost:8080/sessions"
+	}
+};
 
 class Sessions {
 	constructor() {
-		this.sessions = {};
 		this.id = 0;
+		this.sessions = {};
+		this.observingObjects = [];
 		this._readSessions();
 	}
 
 	//private Methode
 	_readSessions() {
 		try {
-			let tmp = fs.readFileSync(FILE);
-			let parsedData = JSON.parse(tmp).sessions;
-			this.sessions = parsedData;
-			//hoechste ID
-			let count = 0;
-			for (var key in this.sessions) {
-				// skip loop if the property is from prototype
-				if (!this.sessions.hasOwnProperty(key)) { continue; }
-				count++;
-			}
-			this.id = count;
+			let readData = fs.readFileSync(SESSIONS_PATH);
+			this.sessions = JSON.parse(readData).sessions;
+			this.id = JSON.parse(readData).id + 1;
+
+			readData = fs.readFileSync(OBSERVING_OBJECTS_PATH);
+			this.observingObjects = JSON.parse(readData).observingObjects;
+
 			console.log("Daten gelesen.");
 		}
 		catch (error) {
@@ -40,15 +66,16 @@ class Sessions {
 			if (!this.sessions.hasOwnProperty(key)) { continue; }
 
 			if (key === id) {
-				console.log(this.sessions.id);
-				return this.sessions.id;
+				try {
+					let session = fs.readFileSync(SESSION_PATH + id + ".json");
+					return session;
+				}
+				catch (error) {
+					console.log(error);
+				}
 			}
 		}
 		return {};
-	}
-
-	delete(id) {
-		delete this.sessions[id];
 	}
 
 	exists(id) {
@@ -56,12 +83,12 @@ class Sessions {
 		for (var key in this.sessions) {
 			// skip loop if the property is from prototype
 			if (!parsedData.hasOwnProperty(key)) { continue; }
-
+	
 			var obj = parsedData[key];
 			for (var prop in obj) {
 				// skip loop if the property is from prototype
 				if (!obj.hasOwnProperty(prop)) { continue; }
-
+	
 				// your code
 				console.log(prop + " = " + obj[prop]);
 				this.sessions[obj.key] = prop;
@@ -79,43 +106,50 @@ class Sessions {
 		return false;
 	}
 
-	create(name, date, location, observingSession) {
+	//Erzeugt neue Session; Noch nicht betrachtet wenn Daten gleich sind
+	create(name, date, location, observingObjects) {
 		this.id++;
-		let o = new ObservingSession(this.id, name, date, location, observingSession);
-		//TODO observingSession.json
 		this.sessions.id = { href: "http://localhost:8080/sessions/${this.id}" };
-		return o.id;
+		let sessionsToSave = {
+			id: this.id,
+			sessions: this.sessions,
+			_links: SESSIONS_LINKS
+		};
+		this.saveSession(SESSIONS_PATH, JSON.stringify(sessionsToSave, null, 4));
+
+		let sessionToSave = {
+			session: {
+				name: `${name}`,
+				date: `${date}`,
+				location: `${location}`
+			},
+			_links: SESSION_LINKS
+		};
+		this.saveSession(SESSION_PATH + this.id + ".json", JSON.stringify(sessionToSave, null, 4));
+
+		for (let object in observingObjects) {
+			//this.observingObjects.push(new ObservingObject());
+		}
+
+		return this.id;
 	}
 
-	//speichert daten; noch nicht betrachten was passieren soll, falls daten gleich sind
-	saveSession(observingSession) {
-		try {
-			this.lastEdited = new Date();
-			if (observingSession !== null) {
-				this.data.push(observingSession);
-				console.log("Daten: " + observingSession.name + ", " + observingSession.date + ", " + observingSession.location + " wurden gespeichert.");
-			}
+	update(id, name, date, location, observingObjects) {
 
-			fs.writeFileSync(FILE, JSON.stringify(this, null, 4));
+		this.sessions.id = {};
+	}
+
+	delete(id) {
+		delete this.sessions[id];
+		this.saveSession();
+	}
+
+	saveSession(path, data) {
+		try {
+			fs.writeFileSync(path, data);
 		}
 		catch (error) {
 			console.error(error);
-		}
-	}
-
-	deleteSession(observingSession) {
-		try {
-			//suche in data nach element welches gelöscht werden soll
-			this.data.forEach(function (element, index, arr) {
-				if (element.name === observingSession.name && Date.parse(element.date) === Date.parse(observingSession.date) && element.location === observingSession.location) {
-					arr.splice(index, 1);
-					this.saveSession(null);
-					console.log("Daten: " + element.name + ", " + element.date + ", " + element.location + " wurden gelöscht.");
-				}
-			}, this);
-		}
-		catch (error) {
-			console.log(error);
 		}
 	}
 }

@@ -1,10 +1,11 @@
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
-let server = express();
+let app = express();
 
 /* ---- Benötigte eigene Klassen ---- */
 const Sessions = require("./Sessions");
+const ObservingObjects = require("./ObservingObjects");
 
 let port = 8080;
 const BASE_URI = "http://localhost:${port}";
@@ -14,23 +15,24 @@ if (!isNaN(process.argv[2])) {
 	port = process.argv[2];
 }
 
-server.use(express.static(path.join("./webapp/dist")));
+app.use(express.static(path.join("./webapp/dist")));
 
-server.listen(port, () => { console.log("HTTP Server listening on port %d.", port); });
+app.listen(port, () => { console.log("HTTP Server listening on port %d.", port); });
 
-server.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-server.get("", (request, response) => {
+app.get("", (request, response) => {
 	response.json({
 		_links: {
 			self: { href: `${BASE_URI}` },
 			sessions: { href: `${BASE_URI}/sessions` },
-			observingObject: { href: `${BASE_URI}/observingObject` },
+			observingObjects: { href: `${BASE_URI}/observingObjects` },
 		}
 	});
 });
 
-server.get("/sessions", (request, response) => {
+app.get("/sessions", (request, response) => {
 	response.json(createSessionListResponseBody());
 });
 
@@ -47,13 +49,26 @@ function createSessionListResponseBody() {
 	};
 }
 
-server.get("/sessions/:id", (request, response) => {
+app.get("/sessions/:id", (request, response) => {
 	let id = request.params.id;
 	if (!Sessions.exists(id)) {
 		response.sendStatus(404);
 	}
 	else {
 		response.json(createSessionResponseBody(id));
+	}
+});
+
+app.put("/sessions/:id", (request, response) => {
+	let id = request.params.id;
+
+	if (!Sessions.exists(id)) {
+		response.sendStatus(404);
+	}
+	else {
+		let updatedSession = request.body;
+		Sessions.update(id, updatedSession.name, updatedSession.date, updatedSession.location, updatedSession.observingObjects);
+		response.json(createSessionResponseBody);
 	}
 });
 
@@ -82,7 +97,7 @@ function createSessionResponseBody(id) {
 	return responseBody;
 }
 
-server.delete("/sessions/:id", (request, response) => {
+app.delete("/sessions/:id", (request, response) => {
 	let id = request.params.id;
 
 	if (!Sessions.exists(id)) {
@@ -94,7 +109,7 @@ server.delete("/sessions/:id", (request, response) => {
 	}
 });
 
-server.post("/sessions", (request, response) => {
+app.post("/sessions", (request, response) => {
 	let newSession = request.body;
 
 	if (!(newSession.name && newSession.date && newSession.location && newSession.observingObject)) {
@@ -106,4 +121,4 @@ server.post("/sessions", (request, response) => {
 	}
 });
 
-module.exports = server;
+module.exports = app;
