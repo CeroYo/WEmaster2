@@ -1,18 +1,28 @@
 (function () {
 	let request = new XMLHttpRequest();
 	request.addEventListener("load", () => { createList(request.response); });
-	request.open("GET", "http://localhost:8080/");
 	request.responseType = "json";
 	request.send();
 
 	function createList(response) {
-		let table = document.getElementById("table");
 		if (response.sessions[0] !== null) {
-			let row = document.createElement("tr");
-			while ((document.body.clientHeight + 100) >= (document.getElementById("table").clientHeight * 0.9)) {
-				let cell = document.createElement("td");
-				// cell.textContent = response.sessions[0]
-				row.appendChild(cell);
+			let i = 0;
+			while (response.sessions[i] !== null) {
+				if ((document.body.clientHeight + 100) >= (document.getElementById("table").clientHeight * 0.9)) {
+					let row = document.createElement("tr");
+					let cell = document.createElement("td");
+					cell.textContent = response.sessions[i].name;
+					row.appendChild(cell);
+					cell.textContent = response.sessions[i].name;
+					row.appendChild(cell);
+					cell.textContent = response.sessions[i].name;
+					row.appendChild(cell);
+					document.getElementById("table").appendChild(row);
+				}
+				else {
+					//Neue Seite mit Rest erzeugen
+				}
+				i++;
 			}
 		}
 	}
@@ -45,9 +55,9 @@ for (let i = 0; i < table.rows.length; i++) {
 }
 
 //Sitzung löschen
-document.getElementById("sitzung-loeschen").addEventListener("click", () => {
-	//
-});
+// document.getElementById("sitzung-loeschen").addEventListener("click", () => {
+// 	//
+// });
 
 //Sitzungseigenschaft bearbeiten
 document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
@@ -62,7 +72,7 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 	let dateBuffer = row.cells[1].innerHTML;
 	let ortBuffer = row.cells[2].innerHTML;
 	btn1.addEventListener("click", () => {
-		//missing: Save Changes
+		//missing: Save Changes//missing: Save Changes
 		row.contentEditable = "false";
 		del();
 	});
@@ -74,7 +84,6 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 		del();
 	});
 	function del() {
-		console.log("test");
 		row.removeChild(btn1);
 		row.removeChild(btn2);
 	}
