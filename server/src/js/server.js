@@ -66,12 +66,15 @@ app.get("/sessions/:id", (request, response) => {
 
 app.put("/sessions/:id", (request, response) => {
 	let id = request.params.id;
+	let updatedSession = request.body;
 
 	if (!Sessions.exists(id)) {
 		response.sendStatus(404);
 	}
+	else if (!(updatedSession.name && updatedSession.date && updatedSession.location)) {
+		response.sendStatus(400);
+	}
 	else {
-		let updatedSession = request.body;
 		Sessions.update(id, updatedSession.name, updatedSession.date, updatedSession.location);
 		response.json(createSessionResponseBody(id));
 	}
