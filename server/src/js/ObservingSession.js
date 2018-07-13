@@ -1,7 +1,6 @@
-const fs = require("fs");
-
 class ObservingSession {
-	constructor(name, date, location, observingObjects = []) {
+	constructor(id, name, date, location, observingObjects = []) {
+		this.id = id;
 		this.name = name;
 		this.date = new Date(date);
 		this.location = location;

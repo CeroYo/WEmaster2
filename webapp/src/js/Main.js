@@ -41,6 +41,7 @@ anlegenBtn.onclick = function () {
 	let oldTable = document.getElementById("table");
 	table.parentNode.replaceChild(table, oldTable);
 };
+
 document.getElementById("sitzung-bearbeiten").addEventListener("click", e => {
 	document.getElementById("table").contentEditable = "true";
 });
