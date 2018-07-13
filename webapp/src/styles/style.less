@@ -2,29 +2,45 @@
 @import (inline) "tables.css";
 @import (inline) "grids-responsive.css";
 @import (inline) "buttons.css";
+@import (inline) "forms.css";
+@import (inline) "buttons-core.css";
 @font-size: 1em;
 @button-width: 100%;
 
 body {
-    font-size: @font-size;
+  font-size: @font-size;
 }
 
+input {}
+
 .header {
-    text-align: center;
+  text-align: center;
 }
 
 .sitzungsliste-table {
-    width: 100%;
+  width: 100%;
+}
+
+.create-new {
+	padding: 10px;
 }
 
 .center {
-    justify-content: center;
+  justify-content: center;
 }
 
 .pure-g {
-    display: flex;
+  display: flex;
 }
 
 .pure-button {
-    width: @button-width;
+  width: @button-width;
 }
+
+.select { 
+	background: rgba(4, 10, 92, 0.253) !important; 
+}
+
+// tr:hover td { 
+// 	background: rgba(255, 255, 0, 0.404);
+// }
