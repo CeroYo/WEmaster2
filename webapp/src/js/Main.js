@@ -26,20 +26,17 @@ for (let i = 0; i < table.rows.length; i++) {
 //Reihe hinzufügen Actionevent; HTML-Seite resetted nach 0,1sec wieder
 let anlegenBtn = document.getElementById("sitzung-anlegen");
 anlegenBtn.onclick = function () {
-	let table = document.getElementById("table");
 	let row = document.createElement("tr");
 	let cell = document.createElement("td");
 	cell.textContent = document.getElementById("sitzung").innerHTML;
+	row.appendChild(cell);
 	cell = document.createElement("td");
 	cell.textContent = document.getElementById("datum").innerHTML;
+	row.appendChild(cell);
 	cell = document.createElement("td");
 	cell.textContent = document.getElementById("ort").innerHTML;
 	row.appendChild(cell);
-	row.appendChild(cell);
-	row.appendChild(cell);
-	table.appendChild(row);
-	let oldTable = document.getElementById("table");
-	table.parentNode.replaceChild(table, oldTable);
+	document.getElementById("table").appendChild(row);
 };
 
 document.getElementById("sitzung-bearbeiten").addEventListener("click", e => {

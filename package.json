@@ -17,6 +17,8 @@
 	},
 	"scripts": {
 		"start": "node server/src/js/main.js",
+		"debugx": "npm run clean:dist && mkdirp server/dist && mkdirp webapp/dist && npm run static && npm run css && npm run jsx && npm run start",
+    "jsx": "browserify server/src/js/main.js > server/dist/main.js && browserify webapp/src/js/main.js > webapp/dist/main.js",
 		"clean": "npm run clean:dist && rm -rf node_modules",
 		"clean:dist": "rm -rf server/dist && rm -rf webapp/dist",
 		"lint": "eslint -c .eslintrc.json server/src/js/* && eslint -c .eslintrc.json webapp/src/js/* && eslint -c .eslintrc.json server/test/** && eslint -c .eslintrc.json webapp/test/**",
