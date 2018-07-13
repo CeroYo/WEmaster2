@@ -43,10 +43,12 @@ function createSessionListResponseBody() {
 	return {
 		sessions: Sessions.getAll(),
 		_links: {
-			self: { href: "${BASE_URI}/sessions" },
+			self: {
+				href: `${BASE_URI}/sessions`
+			},
 			create: {
 				method: "POST",
-				href: "${BASE_URI}/sessions"
+				href: `${BASE_URI}/sessions`
 			}
 		}
 	};
@@ -64,40 +66,22 @@ app.get("/sessions/:id", (request, response) => {
 
 app.put("/sessions/:id", (request, response) => {
 	let id = request.params.id;
+	let updatedSession = request.body;
 
 	if (!Sessions.exists(id)) {
 		response.sendStatus(404);
 	}
+	else if (!(updatedSession.name && updatedSession.date && updatedSession.location)) {
+		response.sendStatus(400);
+	}
 	else {
-		let updatedSession = request.body;
 		Sessions.update(id, updatedSession.name, updatedSession.date, updatedSession.location);
 		response.json(createSessionResponseBody(id));
 	}
 });
 
 function createSessionResponseBody(id) {
-	let responseBody = {
-		_links: {
-			self: { href: `${BASE_URI}/sessions/${id}` }
-		},
-		list: {
-			href: `${BASE_URI}/sessions`
-		}
-	};
-
-	responseBody.session = Sessions.get(id);
-
-	responseBody._links.update = {
-		method: "PUT",
-		href: `${BASE_URI}/sessions/${id}`
-	};
-
-	responseBody._links.delete = {
-		method: "DELETE",
-		href: `${BASE_URI}/sessions/${id}`
-	};
-
-	return responseBody;
+	return Sessions.get(id);
 }
 
 app.delete("/sessions/:id", (request, response) => {
@@ -120,7 +104,7 @@ app.post("/sessions", (request, response) => {
 	}
 	else {
 		let id = Sessions.create(newSession.name, newSession.date, newSession.location, newSession.observingObject);
-		response.location("${BASE_URI}/sessions/${id}").status(201).json(createSessionResponseBody(id));
+		response.location(`${BASE_URI}/sessions/${id}`).status(201).json(createSessionResponseBody(id));
 	}
 });
 
@@ -130,27 +114,72 @@ app.get("/observingObjects", (request, response) => {
 });
 
 function createObservingObjectListResponseBody() {
-	//TODO
+	return {
+		observingObjects: ObservingObjects.getAll(),
+		_links: {
+			self: {
+				href: `${BASE_URI}/observingObjects`
+			},
+			create: {
+				method: "POST",
+				href: `${BASE_URI}/observingObjects`
+			}
+		}
+	};
 }
 
 app.get("/observingObjects/:id", (request, response) => {
-	//TODO
+	let id = request.params.id;
+	if (!ObservingObjects.exists(id)) {
+		response.sendStatus(404);
+	}
+	else {
+		response.json(createObservingObjectResponseBody(id));
+	}
 });
 
 app.put("/observingObjects/:id", (request, response) => {
-	//TODO
+	let id = request.params.id;
+	let updatedObject = request.body;
+
+	if (!ObservingObjects.exists(id)) {
+		response.sendStatus(404);
+	}
+	else if (!(updatedObject.name && updatedObject.sessionId)) {
+		response.sendStatus(400);
+	}
+	else {
+		ObservingObjects.update(id, updatedObject.sessionId, updatedObject.name);
+		response.json(createObservingObjectResponseBody(id));
+	}
 });
 
 function createObservingObjectResponseBody(id) {
-	//TODO
+	return ObservingObjects.get(id);
 }
 
 app.delete("/observingObjects/:id", (request, response) => {
-	//TODO
+	let id = request.params.id;
+
+	if (!ObservingObjects.exists(id)) {
+		response.sendStatus(404);
+	}
+	else {
+		ObservingObjects.delete(id);
+		response.json(createObservingObjectListResponseBody);
+	}
 });
 
 app.post("/observingObjects", (request, response) => {
-	//TODO
+	let newObject = request.body;
+
+	if (!(newObject.name && newObject.sessionId)) {
+		response.sendStatus(400);
+	}
+	else {
+		let id = ObservingObjects.create(newObject.sessionId, newObject.name);
+		response.location(`${BASE_URI}/observingObject/${id}`).status(201).json(createObservingObjectResponseBody(id));
+	}
 });
 
 module.exports = app;
