@@ -59,12 +59,13 @@ class ObservingObjects {
 	}
 
 	create(sessionId, name) {
+		let currentId = this.id;
 		let objectToSave = {
 			observingObject: {
 				session: {
-					href: `${BASE_URI}/sessions/${sessionId}`
+					href: `${BASE_URI}/sessions/${sessionId}`,
+					name: `${name}`
 				},
-				name: `${name}`,
 				_links: {
 					self: {
 						href: "http://localhost:8080/observingObject/:id"
@@ -83,10 +84,10 @@ class ObservingObjects {
 				}
 			}
 		};
-		this.saveObject(OBJECT_PATH + this.id + ".json", JSON.stringify(objectToSave, null, 4));
+		this.saveObject(OBJECT_PATH + currentId + ".json", JSON.stringify(objectToSave, null, 4));
 
-		this.observingObjects[this.id] = {
-			href: `${BASE_URI}/observingObject/${this.id}`,
+		this.observingObjects[currentId] = {
+			href: `${BASE_URI}/observingObject/${currentId}`,
 			sessionId: sessionId
 		};
 		this.id++;
@@ -96,15 +97,17 @@ class ObservingObjects {
 		};
 
 		this.saveObject(OBJECTS_PATH, JSON.stringify(objectsToSave, null, 4));
+		return currentId;
 	}
 
 	update(id, sessionId, name) {
+		sessionId = parseInt(sessionId);
 		let objectToSave = {
 			observingObject: {
 				session: {
-					href: `${BASE_URI}/sessions/${sessionId}`
+					href: `${BASE_URI}/sessions/${sessionId}`,
+					name: `${name}`
 				},
-				name: `${name}`,
 				_links: {
 					self: {
 						href: "http://localhost:8080/observingObject/:id"

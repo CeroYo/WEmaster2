@@ -1,24 +1,24 @@
 {
-	"observingObject": {
-		"session": {
-			"href": "http://localhost:8080/sessions/3"
-		},
-		"name": "blub"
-	},
-	"_links": {
-		"self": {
-			"href": "http://localhost:8080/observingObject/:id"
-		},
-		"list": {
-			"href": "http://localhost:8080/observingObject"
-		},
-		"update": {
-			"method": "PUT",
-			"href": "http://localhost:8080/observingObject/:id"
-		},
-		"delete": {
-			"method": "DELETE",
-			"href": "http://localhost:8080/observingObject/:id"
-		}
-	}
+    "observingObject": {
+        "session": {
+            "href": "http://localhost:8080/sessions/4"
+        },
+        "name": "undefined",
+        "_links": {
+            "self": {
+                "href": "http://localhost:8080/observingObject/:id"
+            },
+            "list": {
+                "href": "http://localhost:8080/observingObject"
+            },
+            "update": {
+                "method": "PUT",
+                "href": "http://localhost:8080/observingObject/:id"
+            },
+            "delete": {
+                "method": "DELETE",
+                "href": "http://localhost:8080/observingObject/:id"
+            }
+        }
+    }
 }
