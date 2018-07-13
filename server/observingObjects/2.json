@@ -4,5 +4,21 @@
 			"href": "http://localhost:8080/sessions/2"
 		},
 		"name": "objectName2"
+	},
+	"_links": {
+		"self": {
+			"href": "http://localhost:8080/observingObject/:id"
+		},
+		"list": {
+			"href": "http://localhost:8080/observingObject"
+		},
+		"update": {
+			"method": "PUT",
+			"href": "http://localhost:8080/observingObject/:id"
+		},
+		"delete": {
+			"method": "DELETE",
+			"href": "http://localhost:8080/observingObject/:id"
+		}
 	}
 }

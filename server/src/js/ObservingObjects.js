@@ -64,7 +64,23 @@ class ObservingObjects {
 				session: {
 					href: `${BASE_URI}/sessions/${sessionId}`
 				},
-				name: `${name}`
+				name: `${name}`,
+				_links: {
+					self: {
+						href: "http://localhost:8080/observingObject/:id"
+					},
+					list: {
+						href: "http://localhost:8080/observingObject"
+					},
+					update: {
+						method: "PUT",
+						href: "http://localhost:8080/observingObject/:id"
+					},
+					delete: {
+						method: "DELETE",
+						href: "http://localhost:8080/observingObject/:id"
+					}
+				}
 			}
 		};
 		this.saveObject(OBJECT_PATH + this.id + ".json", JSON.stringify(objectToSave, null, 4));
@@ -88,7 +104,23 @@ class ObservingObjects {
 				session: {
 					href: `${BASE_URI}/sessions/${sessionId}`
 				},
-				name: `${name}`
+				name: `${name}`,
+				_links: {
+					self: {
+						href: "http://localhost:8080/observingObject/:id"
+					},
+					list: {
+						href: "http://localhost:8080/observingObject"
+					},
+					update: {
+						method: "PUT",
+						href: "http://localhost:8080/observingObject/:id"
+					},
+					delete: {
+						method: "DELETE",
+						href: "http://localhost:8080/observingObject/:id"
+					}
+				}
 			}
 		};
 		this.saveObject(OBJECT_PATH + id + ".json", JSON.stringify(objectToSave, null, 4));

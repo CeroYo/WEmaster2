@@ -109,11 +109,26 @@ app.get("/observingObjects", (request, response) => {
 });
 
 function createObservingObjectListResponseBody() {
-	//TODO
+	return {
+		sessions: ObservingObjects.getAll(),
+		_links: {
+			self: { href: "${BASE_URI}/observingObjects" },
+			create: {
+				method: "POST",
+				href: "${BASE_URI}/observingObjects"
+			}
+		}
+	};
 }
 
 app.get("/observingObjects/:id", (request, response) => {
-	//TODO
+	let id = request.params.id;
+	if (!ObservingObjects.exists(id)) {
+		response.sendStatus(404);
+	}
+	else {
+		response.json(createObservingObjectResponseBody(id));
+	}
 });
 
 app.put("/observingObjects/:id", (request, response) => {
@@ -121,7 +136,7 @@ app.put("/observingObjects/:id", (request, response) => {
 });
 
 function createObservingObjectResponseBody(id) {
-	//TODO
+	return ObservingObjects.get(id);
 }
 
 app.delete("/observingObjects/:id", (request, response) => {
