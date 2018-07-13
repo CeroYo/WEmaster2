@@ -1,0 +1,8 @@
+{
+	"observingObject": {
+		"session": {
+			"href": "http://localhost:8080/sessions/2"
+		},
+		"name": "objectName2"
+	}
+}

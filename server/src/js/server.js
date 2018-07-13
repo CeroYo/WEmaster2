@@ -8,7 +8,8 @@ const Sessions = require("./Sessions");
 const ObservingObjects = require("./ObservingObjects");
 
 let port = 8080;
-const BASE_URI = "http://localhost:${port}";
+const url = "localhost";
+const BASE_URI = `http://${url}:${port}`;
 
 //Überschreibt den Standardport Port 8080, falls beim Aufruf des Start-Scripts ein neuer als Parameter übergeben wurde (z. B. npm run start 2525)
 if (!isNaN(process.argv[2])) {
@@ -75,23 +76,23 @@ app.put("/sessions/:id", (request, response) => {
 function createSessionResponseBody(id) {
 	let responseBody = {
 		_links: {
-			self: { href: "${BASE_URI}/sessions/${id}" }
+			self: { href: `${BASE_URI}/sessions/${id}` }
 		},
 		list: {
-			href: "${BASE_URI}/sessions"
+			href: `${BASE_URI}/sessions`
 		}
 	};
 
-	responseBody.sessions = Sessions.get(id);
+	responseBody.session = Sessions.get(id);
 
 	responseBody._links.update = {
 		method: "PUT",
-		href: "${BASE_URI}/sessions/${id}"
+		href: `${BASE_URI}/sessions/${id}`
 	};
 
 	responseBody._links.delete = {
 		method: "DELETE",
-		href: "${BASE_URI}/sessions/${id}"
+		href: `${BASE_URI}/sessions/${id}`
 	};
 
 	return responseBody;
@@ -112,7 +113,7 @@ app.delete("/sessions/:id", (request, response) => {
 app.post("/sessions", (request, response) => {
 	let newSession = request.body;
 
-	if (!(newSession.name && newSession.date && newSession.location && newSession.observingObject)) {
+	if (!(newSession.name && newSession.date && newSession.location)) {
 		response.sendStatus(400);
 	}
 	else {

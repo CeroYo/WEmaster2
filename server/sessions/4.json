@@ -1,0 +1,23 @@
+{
+    "session": {
+        "name": "myName3",
+        "date": "myDate3",
+        "location": "myLocation3"
+    },
+    "_links": {
+        "self": {
+            "href": "http://http://localhost:8080/sessions/:id"
+        },
+        "list": {
+            "href": "http://http://localhost:8080/sessions"
+        },
+        "update": {
+            "method": "PUT",
+            "href": "http://http://localhost:8080/sessions/:id"
+        },
+        "delete": {
+            "method": "DELETE",
+            "href": "http://http://localhost:8080/sessions/:id"
+        }
+    }
+}

@@ -1,13 +1,16 @@
 {
 	"observingObjects": {
 		"0": {
-			"href": "http://localhost:8080/observingObjects/0"
+			"href": "http://localhost:8080/observingObjects/0",
+			"sessionId": 2
 		},
 		"1": {
-			"href": "http://localhost:8080/observingObjects/1"
+			"href": "http://localhost:8080/observingObjects/1",
+			"sessionId": 0
 		},
 		"2": {
-			"href": "http://localhost:8080/observingObjects/2"
+			"href": "http://localhost:8080/observingObjects/2",
+			"sessionId": 1
 		}
 	}
 }
