@@ -76,28 +76,7 @@ app.put("/sessions/:id", (request, response) => {
 });
 
 function createSessionResponseBody(id) {
-	let responseBody = {
-		_links: {
-			self: { href: `${BASE_URI}/sessions/${id}` }
-		},
-		list: {
-			href: `${BASE_URI}/sessions`
-		}
-	};
-
-	responseBody.session = Sessions.get(id);
-
-	responseBody._links.update = {
-		method: "PUT",
-		href: `${BASE_URI}/sessions/${id}`
-	};
-
-	responseBody._links.delete = {
-		method: "DELETE",
-		href: `${BASE_URI}/sessions/${id}`
-	};
-
-	return responseBody;
+	return Sessions.get(id);
 }
 
 app.delete("/sessions/:id", (request, response) => {
