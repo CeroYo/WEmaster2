@@ -21,6 +21,8 @@
     "lint": "eslint -c .eslintrc.json server/src/js/* && eslint -c .eslintrc.json webapp/src/js/* && eslint -c .eslintrc.json server/test/** && eslint -c .eslintrc.json webapp/test/**",
     "test": "mocha server/test/test && mocha webapp/test/test",
     "debug": "npm run clean && npm install && mkdirp server/dist && mkdirp webapp/dist && npm run static && npm run css && npm run js",
+    "debugx": "npm run clean:dist && mkdirp server/dist && mkdirp webapp/dist && npm run static && npm run css && npm run jsx && npm run start",
+    "jsx": "browserify server/src/js/main.js > server/dist/main.js && browserify webapp/src/js/main.js > webapp/dist/main.js",
     "build": "npm run clean && npm install && mkdirp ./server/dist && mkdirp ./webapp/dist && npm run static:min && npm run css:min && npm run js:min",
     "static": "cp -r webapp/src/assets/. webapp/dist && cp webapp/index.html webapp/dist",
     "static:min": "npm run static && place webapp/dist/index.html style.css style.min.css && place webapp/dist/index.html main.js main.min.js",
@@ -30,5 +32,7 @@
     "js": "browserify server/src/js/main.js > server/dist/main.js && browserify webapp/src/js/main.js > webapp/dist/main.js",
     "js:min": "npm run js && babel-minify server/dist/main.js > server/dist/main.min.js && babel-minify webapp/dist/main.js > webapp/dist/main.min.js",
     "postjs:min": "rm -f server/dist/main.js && rm -f webapp/dist/main.js"
-  }
+  },
+  "author": "Marvin Schneider, Thilo Nienhaus",
+  "license": "UNLICENSED"
 }
