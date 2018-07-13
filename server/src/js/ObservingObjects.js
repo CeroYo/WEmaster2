@@ -86,12 +86,23 @@ class ObservingObjects {
 		let objectToSave = {
 			observingObject: {
 				session: {
-					href: SESSION_PATH + sessionId
+					href: `${BASE_URI}/sessions/${sessionId}`
 				},
 				name: `${name}`
 			}
 		};
 		this.saveObject(OBJECT_PATH + id + ".json", JSON.stringify(objectToSave, null, 4));
+
+		this.observingObjects[id] = {
+			href: `${BASE_URI}/observingObject/${id}`,
+			sessionId: sessionId
+		};
+		let objectsToSave = {
+			id: this.id,
+			observingObjects: this.observingObjects
+		};
+
+		this.saveObject(OBJECTS_PATH, JSON.stringify(objectsToSave, null, 4));
 	}
 
 	delete(id) {

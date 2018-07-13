@@ -2,8 +2,6 @@ const fs = require("fs");
 const ObservingObject = require("./ObservingObjects");
 const SESSIONS_PATH = "./server/sessions/sessions.json";
 const SESSION_PATH = "./server/sessions/";
-const OBSERVING_OBJECTS_PATH = "./server/observingObjects/observingObjects.json";
-const OBSERVING_OBJECT_PATH = "./server/observingObjects/";
 
 let port = 8080;
 const url = "localhost";
@@ -39,9 +37,9 @@ class Sessions {
 			// skip loop if the property is from prototype
 			if (!this.sessions.hasOwnProperty(key)) { continue; }
 
-			if (parseInt(key) === id) {
+			console.log(key + " === " + id + (key === id));
+			if (key === id) {
 				try {
-					console.log("bin-drin");
 					let session = JSON.parse(fs.readFileSync(SESSION_PATH + id + ".json"));
 					return session;
 				}
@@ -107,9 +105,47 @@ class Sessions {
 		return currentId;
 	}
 
-	update(id, name, date, location, observingObjects) {
-		//
-		this.sessions.id = {};
+	update(id, name, date, location) {
+		let sessionToSave = {
+			session: {
+				name: `${name}`,
+				date: `${date}`,
+				location: `${location}`
+			},
+			_links: {
+				self: {
+					href: `${BASE_URI}/sessions/:id`
+				},
+				list: {
+					href: `${BASE_URI}/sessions`
+				},
+				update: {
+					method: "PUT",
+					href: `${BASE_URI}/sessions/:id`
+				},
+				delete: {
+					method: "DELETE",
+					href: `${BASE_URI}/sessions/:id`
+				}
+			}
+		};
+		this.saveSession(SESSION_PATH + id + ".json", JSON.stringify(sessionToSave, null, 4));
+
+		this.sessions[id] = { href: `${BASE_URI}/sessions/${id}` };
+		let sessionsToSave = {
+			id: this.id,
+			sessions: this.sessions,
+			_links: {
+				self: {
+					href: `${BASE_URI}/sessions`
+				},
+				create: {
+					method: "POST",
+					href: `${BASE_URI}/sessions`
+				}
+			}
+		};
+		this.saveSession(SESSIONS_PATH, JSON.stringify(sessionsToSave, null, 4));
 	}
 
 	delete(id) {

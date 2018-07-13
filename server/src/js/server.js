@@ -33,6 +33,8 @@ app.get("", (request, response) => {
 	});
 });
 
+/* ---- Requests Sessions ---- */
+
 app.get("/sessions", (request, response) => {
 	response.json(createSessionListResponseBody());
 });
@@ -68,8 +70,8 @@ app.put("/sessions/:id", (request, response) => {
 	}
 	else {
 		let updatedSession = request.body;
-		Sessions.update(id, updatedSession.name, updatedSession.date, updatedSession.location, updatedSession.observingObjects);
-		response.json(createSessionResponseBody);
+		Sessions.update(id, updatedSession.name, updatedSession.date, updatedSession.location);
+		response.json(createSessionResponseBody(id));
 	}
 });
 
@@ -120,6 +122,35 @@ app.post("/sessions", (request, response) => {
 		let id = Sessions.create(newSession.name, newSession.date, newSession.location, newSession.observingObject);
 		response.location("${BASE_URI}/sessions/${id}").status(201).json(createSessionResponseBody(id));
 	}
+});
+
+/* ---- Requests observingObjects --- */
+app.get("/observingObjects", (request, response) => {
+	response.json(createObservingObjectListResponseBody());
+});
+
+function createObservingObjectListResponseBody() {
+	//TODO
+}
+
+app.get("/observingObjects/:id", (request, response) => {
+	//TODO
+});
+
+app.put("/observingObjects/:id", (request, response) => {
+	//TODO
+});
+
+function createObservingObjectResponseBody(id) {
+	//TODO
+}
+
+app.delete("/observingObjects/:id", (request, response) => {
+	//TODO
+});
+
+app.post("/observingObjects", (request, response) => {
+	//TODO
 });
 
 module.exports = app;
