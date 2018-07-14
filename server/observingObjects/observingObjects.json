@@ -1,10 +1,6 @@
 {
-    "id": 27,
+    "id": 28,
     "observingObjects": {
-        "0": {
-            "href": "http://localhost:8080/observingObjects/0",
-            "sessionId": 2
-        },
         "1": {
             "href": "http://localhost:8080/observingObjects/1",
             "sessionId": 1
@@ -25,14 +21,6 @@
             "href": "http://localhost:8080/observingObjects/8",
             "sessionId": 8
         },
-        "9": {
-            "href": "http://localhost:8080/observingObjects/9",
-            "sessionId": 9
-        },
-        "10": {
-            "href": "http://localhost:8080/observingObjects/10",
-            "sessionId": 10
-        },
         "11": {
             "href": "http://localhost:8080/observingObjects/11",
             "sessionId": 11
@@ -44,10 +32,6 @@
         "15": {
             "href": "http://localhost:8080/observingObjects/15",
             "sessionId": 15
-        },
-        "16": {
-            "href": "http://localhost:8080/observingObjects/16",
-            "sessionId": 16
         },
         "17": {
             "href": "http://localhost:8080/observingObjects/17",
@@ -68,10 +52,6 @@
         "21": {
             "href": "http://localhost:8080/observingObjects/21",
             "sessionId": 20
-        },
-        "22": {
-            "href": "http://localhost:8080/observingObjects/22",
-            "sessionId": 21
         },
         "23": {
             "href": "http://localhost:8080/observingObjects/23",
