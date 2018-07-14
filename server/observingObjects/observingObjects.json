@@ -1,5 +1,5 @@
 {
-    "id": 28,
+    "id": 38,
     "observingObjects": {
         "1": {
             "href": "http://localhost:8080/observingObjects/1",
@@ -72,6 +72,46 @@
         "27": {
             "href": "http://localhost:8080/observingObjects/27",
             "sessionId": 26
+        },
+        "28": {
+            "href": "http://localhost:8080/observingObjects/28",
+            "sessionId": 27
+        },
+        "29": {
+            "href": "http://localhost:8080/observingObjects/29",
+            "sessionId": 28
+        },
+        "30": {
+            "href": "http://localhost:8080/observingObjects/30",
+            "sessionId": 29
+        },
+        "31": {
+            "href": "http://localhost:8080/observingObjects/31",
+            "sessionId": 30
+        },
+        "32": {
+            "href": "http://localhost:8080/observingObjects/32",
+            "sessionId": 31
+        },
+        "33": {
+            "href": "http://localhost:8080/observingObjects/33",
+            "sessionId": 32
+        },
+        "34": {
+            "href": "http://localhost:8080/observingObjects/34",
+            "sessionId": 33
+        },
+        "35": {
+            "href": "http://localhost:8080/observingObjects/35",
+            "sessionId": 34
+        },
+        "36": {
+            "href": "http://localhost:8080/observingObjects/36",
+            "sessionId": 35
+        },
+        "37": {
+            "href": "http://localhost:8080/observingObjects/37",
+            "sessionId": 36
         }
     }
 }

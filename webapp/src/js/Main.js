@@ -2,12 +2,15 @@ const PORT = 8080;
 const BASE_URI = `http://localhost:${PORT}/`;
 
 let sessionsJSON = {};
+let sessionsArr = [];
+let page = 1;
+let numberOfPages = 1;
 
-document.onload = loadTable();
+document.onload = loadTable(page);
 
-function loadTable() {
+function loadTable(page) {
 	//Tabelle leeren
-	document.getElementById("table").innerHTML = "<thead><tr id=\"th\"><th>Sitzung</th><th>Datum</th><th>Ort</th></tr></thead>";
+	document.getElementById("table").parentElement.innerHTML = "<table id=\"table\" class=\"sitzungsliste-table pure-table pure-table-horizontal\"><thead><tr id=\"th\"><th>Sitzung</th><th>Datum</th><th>Ort</th></tr></thead></table>";
 	//Sessiondaten anfragen
 	let request = new XMLHttpRequest();
 	request.addEventListener("load", () => createList(request.response));
@@ -18,8 +21,8 @@ function loadTable() {
 	function createList(response) {
 		sessionsJSON = response.sessions;
 
+		sessionsArr = [];
 		console.log(sessionsJSON);
-		let sessionsArr = [];
 		for (let i = 0; i < Object.keys(sessionsJSON).length; i++) {
 			let keyValue = Object.keys(sessionsJSON)[i];
 			console.log(keyValue);
@@ -34,37 +37,34 @@ function loadTable() {
 		console.log(sessionsArr);
 
 		//Tabellenhöhe
-		let docHeight = window.innerHeight - 100;
+		let docHeight = window.innerHeight - 200;
 		let numberTableElements = Math.round(docHeight / document.getElementById("th").clientHeight);
-		let numberOfPages = Math.ceil(numberTableElements / sessionsArr.length);
+		numberOfPages = Math.ceil(sessionsArr.length / numberTableElements);
 		console.log(document.body.clientHeight);
 		console.log(numberTableElements);
 		console.log(numberOfPages);
-		let count = 0;
-		for (let i = 0; i < sessionsArr.length; i++) {
-			if (count < numberTableElements) {
-				let request2 = new XMLHttpRequest();
-				request2.addEventListener("load", () => {
-					let row = document.createElement("tr");
-					let cell1 = document.createElement("td");
-					let cell2 = document.createElement("td");
-					let cell3 = document.createElement("td");
-					cell1.textContent = request2.response.session.name;
-					row.appendChild(cell1);
-					cell2.textContent = request2.response.session.date;
-					row.appendChild(cell2);
-					cell3.textContent = request2.response.session.location;
-					row.appendChild(cell3);
-					row.addEventListener("click", select);
-					document.getElementById("table").appendChild(row);
-				});
-				console.log(i);
-				console.log(sessionsArr[i].json.href);
-				request2.open("GET", sessionsArr[i].json.href);
-				request2.responseType = "json";
-				request2.send();
-			}
-			count++;
+		for (let i = (page - 1) * numberTableElements; (i < sessionsArr.length) && (i < page * numberTableElements); i++) {
+			console.log(i);
+			let request2 = new XMLHttpRequest();
+			request2.addEventListener("load", () => {
+				let row = document.createElement("tr");
+				let cell1 = document.createElement("td");
+				let cell2 = document.createElement("td");
+				let cell3 = document.createElement("td");
+				cell1.textContent = request2.response.session.name;
+				row.appendChild(cell1);
+				cell2.textContent = request2.response.session.date;
+				row.appendChild(cell2);
+				cell3.textContent = request2.response.session.location;
+				row.appendChild(cell3);
+				row.addEventListener("click", select);
+				document.getElementById("table").appendChild(row);
+			});
+			console.log(i);
+			console.log(sessionsArr[i].json.href);
+			request2.open("GET", sessionsArr[i].json.href);
+			request2.responseType = "json";
+			request2.send();
 		}
 		createPaginationButton(numberOfPages);
 	}
@@ -73,18 +73,23 @@ function loadTable() {
 function createPaginationButton(numberOfPages) {
 	let prev = document.createElement("input");
 	prev.setAttribute("type", "button");
-	prev.setAttribute("id", "zurueck");
+	prev.setAttribute("id", "prev");
 	prev.setAttribute("value", "<");
 	prev.setAttribute("class", "pure-button pagination-button");
 	document.getElementById("table").parentElement.appendChild(prev);
+	prev.onclick = function () { setNewPage(page - 1); };
 
-	for (let i = 0; i < numberOfPages; i++) {
+	for (let i = 1; i <= numberOfPages; i++) {
 		let btn = document.createElement("input");
 		btn.setAttribute("type", "button");
 		btn.setAttribute("id", `page${i}`);
 		btn.setAttribute("value", `${i}`);
 		btn.setAttribute("class", "pure-button pagination-button");
+		if (i === page) {
+			btn.classList.add("pagination-button-active");
+		}
 		document.getElementById("table").parentElement.appendChild(btn);
+		btn.onclick = function () { setNewPage(i); };
 	}
 
 	let next = document.createElement("input");
@@ -93,6 +98,15 @@ function createPaginationButton(numberOfPages) {
 	next.setAttribute("value", ">");
 	next.setAttribute("class", "pure-button pagination-button");
 	document.getElementById("table").parentElement.appendChild(next);
+	next.onclick = function () { setNewPage(page + 1); };
+}
+
+function setNewPage(i) {
+	if (i > numberOfPages || i < 1) {
+		return;
+	}
+	page = i;
+	loadTable(page);
 }
 
 // Selectioncolor; Funktioniert nicht bei Feldern mit vorher definierten Feldern
@@ -146,7 +160,7 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 		request.send(`name=${sitzungText}&date=${datumText}&location=${ortText}&object=${objectText}`);
 
 		hide();
-		loadTable();
+		loadTable(page);
 		document.getElementById("editForm").classList.add("invisible");
 	});
 
@@ -177,7 +191,7 @@ sitzungAnlegenBtn.addEventListener("click", () => {
 	//Request senden
 	let request = new XMLHttpRequest();
 	request.open("POST", BASE_URI + "sessions");
-	request.addEventListener("load", () => loadTable());
+	request.addEventListener("load", () => loadTable(page));
 	request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	request.responseType = "json";
 	request.send(`name=${sitzungText}&date=${datumText}&location=${ortText}&object=${objectText}`);
@@ -258,7 +272,7 @@ function deleteSession() {
 	//Request senden
 	let request = new XMLHttpRequest();
 	request.open("DELETE", BASE_URI + `sessions/${sessionId}`);
-	request.addEventListener("load", () => loadTable());
+	request.addEventListener("load", () => loadTable(page));
 	request.responseType = "json";
 	request.send();
 }
