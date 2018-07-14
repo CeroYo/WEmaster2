@@ -1,22 +1,6 @@
 {
-    "id": 33,
+    "id": 31,
     "observingObjects": {
-        "1": {
-            "href": "http://localhost:8080/observingObjects/1",
-            "sessionId": 1
-        },
-        "4": {
-            "href": "http://localhost:8080/observingObjects/4",
-            "sessionId": 1
-        },
-        "6": {
-            "href": "http://localhost:8080/observingObjects/6",
-            "sessionId": 6
-        },
-        "8": {
-            "href": "http://localhost:8080/observingObjects/8",
-            "sessionId": 8
-        },
         "11": {
             "href": "http://localhost:8080/observingObjects/11",
             "sessionId": 11
@@ -24,10 +8,6 @@
         "13": {
             "href": "http://localhost:8080/observingObjects/13",
             "sessionId": 13
-        },
-        "17": {
-            "href": "http://localhost:8080/observingObjects/17",
-            "sessionId": 17
         },
         "18": {
             "href": "http://localhost:8080/observingObjects/18",
@@ -49,10 +29,6 @@
             "href": "http://localhost:8080/observingObjects/23",
             "sessionId": 22
         },
-        "25": {
-            "href": "http://localhost:8080/observingObjects/25",
-            "sessionId": 24
-        },
         "27": {
             "href": "http://localhost:8080/observingObjects/27",
             "sessionId": 26
@@ -61,37 +37,17 @@
             "href": "http://localhost:8080/observingObjects/28",
             "sessionId": 27
         },
+        "29": {
+            "href": "http://localhost:8080/observingObjects/29",
+            "sessionId": "26"
+        },
         "30": {
             "href": "http://localhost:8080/observingObjects/30",
-            "sessionId": 29
-        },
-        "31": {
-            "href": "http://localhost:8080/observingObjects/31",
-            "sessionId": 30
+            "sessionId": "26"
         },
         "32": {
             "href": "http://localhost:8080/observingObjects/32",
             "sessionId": 31
-        },
-        "33": {
-            "href": "http://localhost:8080/observingObjects/33",
-            "sessionId": 32
-        },
-        "34": {
-            "href": "http://localhost:8080/observingObjects/34",
-            "sessionId": 33
-        },
-        "35": {
-            "href": "http://localhost:8080/observingObjects/35",
-            "sessionId": 34
-        },
-        "36": {
-            "href": "http://localhost:8080/observingObjects/36",
-            "sessionId": 35
-        },
-        "37": {
-            "href": "http://localhost:8080/observingObjects/37",
-            "sessionId": 36
         }
     }
 }

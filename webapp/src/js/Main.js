@@ -149,7 +149,6 @@ function select() {
 		selectedNr = 0;
 		hideSessionDetails();
 	}
-<<<<<<< HEAD
 }
 // for (let i = 0; i < table.rows.length; i++) {
 // 	table.rows[i].onclick = select;
@@ -175,13 +174,9 @@ function selectObj() {
 		selectedObj = false;
 		selectedObjNr = 0;
 	}
-=======
-	console.log(selectedNr);
-	console.log((selectedNr - 1) + ((page - 1) * numberTableElements));
-	console.log(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].json.href);
-	console.log(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].key);
->>>>>>> ce61aa0c84c316d3a66be3ec3b2a82965983a39f
 }
+
+//Beobachtungsobjekt bearbeiten
 
 //Sitzungseigenschaft bearbeiten
 document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
@@ -193,7 +188,8 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 	document.getElementById("editDatum").value = document.getElementById("sitzungsDatum").innerHTML;
 	document.getElementById("editOrt").value = document.getElementById("sitzungsOrt").innerHTML;
 	document.getElementById("editObjekt").value = document.getElementById("sitzungsObjekte").innerHTML;
-	btn1.addEventListener("click", () => {
+	btn1.addEventListener("click", btn1Event);
+	function btn1Event() {
 		let nr = Object.keys(sessionsJSON)[selectedNr - 1];
 		let sitzungText = document.getElementById("editSitzung").value;
 		let datumText = document.getElementById("editDatum").value;
@@ -208,38 +204,42 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 		hide();
 		loadTable(page);
 		document.getElementById("editForm").classList.add("invisible");
-	});
+	}
 
-	btn2.addEventListener("click", () => {
+	btn2.addEventListener("click", btn2Event);
+	function btn2Event() {
 		document.getElementById("editSitzung").value = "";
 		document.getElementById("editDatum").value = "";
 		document.getElementById("editOrt").value = "";
 		document.getElementById("editObjekt").value = "";
 		hide();
-	});
+	}
 	function hide() {
 		document.getElementById("editForm").classList.add("invisible");
+		btn1.removeEventListener("click", btn1Event);
+		btn2.removeEventListener("click", btn2Event);
 	}
 });
 
 //Beobachtungsobjekt hinzufügen
 document.getElementById("objekt-hinzufuegen").addEventListener("click", () => {
 	document.getElementById("addObject").classList.remove("invisible");
-	document.getElementById("addObj").addEventListener("click", () => {
-		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
-		let name = document.getElementById("addObjName").value;
-		let request = new XMLHttpRequest();
-		request.addEventListener("load", () => { console.log(""); });
-		request.open("POST", BASE_URI + "observingObjects");
-		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		request.send(`name=${name}&sessionId=${sessionId}`);
-		// getObservingObjectNames(sessionId);
-		hideSessionDetails();
-		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
-		document.getElementById("addObject").classList.add("invisible");
-	});
+	document.getElementById("addObj").addEventListener("click", addObjEvent);
 });
-
+function addObjEvent() {
+	let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+	let name = document.getElementById("addObjName").value;
+	let request = new XMLHttpRequest();
+	request.addEventListener("load", () => { console.log(""); });
+	request.open("POST", BASE_URI + "observingObjects");
+	request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	request.send(`name=${name}&sessionId=${sessionId}`);
+	// getObservingObjectNames(sessionId);
+	hideSessionDetails();
+	showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+	document.getElementById("addObject").classList.add("invisible");
+	document.getElementById("addObj").removeEventListener("click", addObjEvent);
+}
 //Beobachtungsobjekt löschen
 document.getElementById("objekt-loeschen").onclick = deleteObj;
 function deleteObj() {
@@ -247,7 +247,6 @@ function deleteObj() {
 	let request = new XMLHttpRequest();
 	request.addEventListener("load", () => {
 		let observingObjects = request.response.observingObjects;
-		let i = 0;
 		let href;
 		for (var key in observingObjects) {
 			if (!observingObjects.hasOwnProperty(key)) { continue; }
@@ -261,15 +260,16 @@ function deleteObj() {
 			}
 		}
 		function del(response) {
-			if (response.name === document.getElementById("sitzungsObjekte").rows[selectedObjNr].value) {
-				let request2 = new XMLHttpRequest();
-				request2.addEventListener("load", () => {
-					hideSessionDetails();
-					// showSessionDetails(sessionsJSON[sessionId].href, sessionId);
-				});
-				request2.open("DELETE", href);
-				request2.responseType = "json";
-				request2.send();
+			if (response.observingObject.name === document.getElementById("sitzungsObjekte").rows[selectedObjNr].value) {
+				// let request2 = new XMLHttpRequest();
+				// request2.addEventListener("load", () => {
+				// 	hideSessionDetails();
+				// 	showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+				// });
+				// request2.open("DELETE", href);
+				// request2.responseType = "json";
+				// request2.send();
+				console.log("Value beim loeschen" + response.name + " " + document.getElementById("sitzungsObjekte").rows[selectedObjNr].value);
 			}
 		}
 	});
