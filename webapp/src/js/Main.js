@@ -32,7 +32,7 @@ function loadTable() {
 					row.appendChild(cell2);
 					cell3.textContent = request2.response.session.location;
 					row.appendChild(cell3);
-					row.onclick = select;
+					row.addEventListener("click", select);
 					document.getElementById("table").appendChild(row);
 					//document.createElement("<input type=\"button\" id=\"zurueck\" name=\"zurueck\" value=\"<\" class=\"pure-button pagination-button\" />");
 					//document.getElementById("table").parentElement.appendChild("<input type=\"button\" id=\"pageOne\" name=\"pageOne\" value=\"1\" class=\"pure-button pagination-button\" /><input type =\"button\" id=\"zurueck\" name=\"zurueck\" value=\">\" class=\"pure-button pagination-button\" />");
@@ -86,43 +86,38 @@ for (let i = 0; i < table.rows.length; i++) {
 
 //Sitzungseigenschaft bearbeiten
 document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
+	document.getElementById("editForm").classList.remove("invisible");
 	let row = document.getElementById("table").rows[selectedNr];
-	let btn1 = document.createElement("button");
-	let btn2 = document.createElement("button");
-	//Größe lässt sich nicht verändern?
-	btn1.style.height = row.clientHeight;
-	row.appendChild(btn1);
-	row.appendChild(btn2);
-	let titleBuffer = row.cells[0].innerHTML;
-	let dateBuffer = row.cells[1].innerHTML;
-	let ortBuffer = row.cells[2].innerHTML;
+	let btn1 = document.getElementById("bestaetigen");
+	let btn2 = document.getElementById("verwerfen");
 	btn1.addEventListener("click", () => {
-		//weiß nicht wie data aussehen muss / was put erwartet
-		let data = {
-			name: row.cells[0].innerHTML,
-			date: row.cells[1].innerHTML,
-			location: row.cells[2].innerHTML
-		};
+		let nr = Object.keys(sessionsJSON)[selectedNr - 1];
+		let sitzungText = document.getElementById("editSitzung").value;
+		let datumText = document.getElementById("editDatum").value;
+		let ortText = document.getElementById("editOrt").value;
+		let objectText = document.getElementById("editObjekt").value;
+		console.log(sitzungText + datumText + ortText + objectText);
 		let request = new XMLHttpRequest();
 		request.addEventListener("load", () => { console.log(""); });
-		request.open("PUT", BASE_URI + `sessions/${selectedNr}`);
-		request.setRequestHeader("Content-Type", "application/json");
-		request.send(data);
-		row.contentEditable = "false";
-		del();
+		request.open("PUT", BASE_URI + `sessions/${nr}`);
+		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		request.send(`name=${sitzungText}&date=${datumText}&location=${ortText}&object=${objectText}`);
+
+		hide();
+		loadTable();
+		document.getElementById("editForm").classList.add("invisible");
 	});
+
 	btn2.addEventListener("click", () => {
-		row.cells[0].innerHTML = titleBuffer;
-		row.cells[1].innerHTML = dateBuffer;
-		row.cells[2].innerHTML = ortBuffer;
-		row.contentEditable = "false";
-		del();
+		document.getElementById("editSitzung").value = "";
+		document.getElementById("editDatum").value = "";
+		document.getElementById("editOrt").value = "";
+		document.getElementById("editObjekt").value = "";
+		hide();
 	});
-	function del() {
-		row.removeChild(btn1);
-		row.removeChild(btn2);
+	function hide() {
+		document.getElementById("editForm").classList.add("invisible");
 	}
-	row.contentEditable = "true";
 });
 
 //Sitzung hinzufügen
@@ -161,6 +156,7 @@ function showSessionDetails(sessionLink, sessionId) {
 		document.getElementById("sitzungsDatum").innerHTML = response.session.date;
 		document.getElementById("sitzungsOrt").innerHTML = response.session.location;
 		document.getElementById("sitzungsanzeige").classList.remove("invisible");
+		document.getElementById("buttons").classList.remove("invisible");
 	});
 	request.open("GET", sessionLink);
 	request.responseType = "json";
@@ -174,6 +170,9 @@ function hideSessionDetails() {
 	document.getElementById("sitzungsDatum").innerHTML = "";
 	document.getElementById("sitzungsOrt").innerHTML = "";
 	document.getElementById("sitzungsObjekte").innerHTML = "";
+	document.getElementById("sitzungsanzeige").classList.add("invisible");
+	document.getElementById("buttons").classList.add("invisible");
+	document.getElementById("editForm").classList.add("invisible");
 }
 
 //ObservingObject requesten und alle mit gewisser SessionId requesten
