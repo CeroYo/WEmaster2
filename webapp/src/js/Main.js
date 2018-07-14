@@ -19,7 +19,11 @@ function loadTable(page) {
 	request.open("GET", BASE_URI + "sessions");
 	request.responseType = "json";
 	request.send();
-
+	if (!document.getElementById("sitzungsanzeige").classList.contains("invisible")) {
+		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+		hideSessionDetails();
+		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+	}
 	function createList(response) {
 		sessionsJSON = response.sessions;
 		console.log(sessionsJSON);
@@ -146,10 +150,38 @@ function select() {
 		selectedNr = 0;
 		hideSessionDetails();
 	}
+<<<<<<< HEAD
+}
+// for (let i = 0; i < table.rows.length; i++) {
+// 	table.rows[i].onclick = select;
+// }
+
+let objTable = document.getElementById("sitzungsObjekte");
+let selectedObj = false;
+let selectedObjNr;
+function selectObj() {
+	if (this.id !== "th" && this.className === "" && selectedObj === false) {
+		this.className += "select";
+		selectedObjNr = this.rowIndex;
+		selectedObj = true;
+	}
+	else if (this.id !== "th" && this.className === "" && selectedObj === true) {
+		objTable.rows[selectedObjNr].className = "";
+		this.className += "select";
+		selectedObjNr = this.rowIndex;
+		selectedObj = true;
+	}
+	else if (this.id !== "th" && this.className !== "" && selectedObj === true) {
+		this.className = "";
+		selectedObj = false;
+		selectedObjNr = 0;
+	}
+=======
 	console.log(selectedNr);
 	console.log((selectedNr - 1) + ((page - 1) * numberTableElements));
 	console.log(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].json.href);
 	console.log(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].key);
+>>>>>>> ce61aa0c84c316d3a66be3ec3b2a82965983a39f
 }
 
 //Sitzungseigenschaft bearbeiten
@@ -158,13 +190,16 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 	let row = document.getElementById("table").rows[selectedNr];
 	let btn1 = document.getElementById("bestaetigen");
 	let btn2 = document.getElementById("verwerfen");
+	document.getElementById("editSitzung").value = document.getElementById("sitzungsName").innerHTML;
+	document.getElementById("editDatum").value = document.getElementById("sitzungsDatum").innerHTML;
+	document.getElementById("editOrt").value = document.getElementById("sitzungsOrt").innerHTML;
+	document.getElementById("editObjekt").value = document.getElementById("sitzungsObjekte").innerHTML;
 	btn1.addEventListener("click", () => {
 		let nr = Object.keys(sessionsJSON)[selectedNr - 1];
 		let sitzungText = document.getElementById("editSitzung").value;
 		let datumText = document.getElementById("editDatum").value;
 		let ortText = document.getElementById("editOrt").value;
 		let objectText = document.getElementById("editObjekt").value;
-		console.log(sitzungText + datumText + ortText + objectText);
 		let request = new XMLHttpRequest();
 		request.addEventListener("load", () => { console.log(""); });
 		request.open("PUT", BASE_URI + `sessions/${nr}`);
@@ -187,6 +222,62 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 		document.getElementById("editForm").classList.add("invisible");
 	}
 });
+
+//Beobachtungsobjekt hinzufügen
+document.getElementById("objekt-hinzufuegen").addEventListener("click", () => {
+	document.getElementById("addObject").classList.remove("invisible");
+	document.getElementById("addObj").addEventListener("click", () => {
+		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+		let name = document.getElementById("addObjName").value;
+		let request = new XMLHttpRequest();
+		request.addEventListener("load", () => { console.log(""); });
+		request.open("POST", BASE_URI + "observingObjects");
+		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		request.send(`name=${name}&sessionId=${sessionId}`);
+		// getObservingObjectNames(sessionId);
+		hideSessionDetails();
+		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+		document.getElementById("addObject").classList.add("invisible");
+	});
+});
+
+//Beobachtungsobjekt löschen
+document.getElementById("objekt-loeschen").onclick = deleteObj;
+function deleteObj() {
+	let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+	let request = new XMLHttpRequest();
+	request.addEventListener("load", () => {
+		let observingObjects = request.response.observingObjects;
+		let i = 0;
+		let href;
+		for (var key in observingObjects) {
+			if (!observingObjects.hasOwnProperty(key)) { continue; }
+			if (parseInt(observingObjects[key].sessionId) === parseInt(sessionId)) {
+				href = observingObjects[key].href;
+				let request3 = new XMLHttpRequest();
+				request3.addEventListener("load", del(request3.response));
+				request3.open("GET", href);
+				request3.responseType = "json";
+				request3.send();
+			}
+		}
+		function del(response) {
+			if (response.name === document.getElementById("sitzungsObjekte").rows[selectedObjNr].value) {
+				let request2 = new XMLHttpRequest();
+				request2.addEventListener("load", () => {
+					hideSessionDetails();
+					// showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+				});
+				request2.open("DELETE", href);
+				request2.responseType = "json";
+				request2.send();
+			}
+		}
+	});
+	request.open("GET", `${BASE_URI}observingObjects`);
+	request.responseType = "json";
+	request.send();
+}
 
 //Sitzung hinzufügen
 let sitzungAnlegenBtn = document.getElementById("sitzung-anlegen");
@@ -252,7 +343,20 @@ function getObservingObjectNames(sessionId) {
 	request.addEventListener("load", () => {
 		//Einzelne Objekte anfragen
 		let observingObjects = request.response.observingObjects;
+<<<<<<< HEAD
 		let selectedObjects = [];
+=======
+		// if(document.getElementById("sitzungsObjekte").rows[0])
+		if (document.getElementById("sitzungsObjekte").innerHTML === "") {
+			let thead = document.createElement("thead");
+			let row = document.createElement("tr");
+			let th = document.createElement("th");
+			th.innerHTML = "Beobachtungsobjekte";
+			row.appendChild(th);
+			thead.appendChild(row);
+			document.getElementById("sitzungsObjekte").appendChild(thead);
+		}
+>>>>>>> 04885eece0de65d721ba8bffcda62fbcaf70f86e
 		for (var key in observingObjects) {
 			if (!observingObjects.hasOwnProperty(key)) { continue; }
 
@@ -263,8 +367,18 @@ function getObservingObjectNames(sessionId) {
 				request2.addEventListener("load", () => {
 					//Objekte html-Seite hinzufügen
 					let observingObject = request2.response.observingObject;
+<<<<<<< HEAD
 					document.getElementById("sitzungsObjekte").innerHTML += observingObject.name + "<br/>";
 					selectedObjects.push(observingObject.name);
+=======
+					let row = document.createElement("tr");
+					let text = document.createElement("td");
+					text.innerHTML = observingObject.name;
+					row.appendChild(text);
+					row.addEventListener("click", selectObj);
+					document.getElementById("sitzungsObjekte").appendChild(row);
+					// document.getElementById("sitzungsObjekte").innerHTML += observingObject.name + "<br/>";
+>>>>>>> 04885eece0de65d721ba8bffcda62fbcaf70f86e
 				});
 				request2.open("GET", href);
 				request2.responseType = "json";
@@ -293,6 +407,7 @@ function deleteSession() {
 	request.responseType = "json";
 	request.send();
 }
+<<<<<<< HEAD
 
 //Karte anfragen
 document.getElementById("kartendienst").onclick = getMap;
@@ -373,3 +488,5 @@ function print() {
 // for (let i = 0; i < table.rows.length; i++) {
 // 	table.rows[i].onclick = select;
 // }
+=======
+>>>>>>> 04885eece0de65d721ba8bffcda62fbcaf70f86e

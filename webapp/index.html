@@ -5,7 +5,6 @@
 	<link rel="stylesheet" href="style.css">
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-
 	<title>Amateurastronomische Beobachtungssitzungen</title>
 </head>
 
@@ -40,9 +39,8 @@
 						<b>Sitzungsort:</b>
 						<span id="sitzungsOrt"></span>
 						<br/>
-						<b>Beobachtungsobjekte:</b>
-						<span id="sitzungsObjekte"></span>
-						<br/>
+						<table id="sitzungsObjekte" class="sitzungsliste-table pure-table pure-table-horizontal" style="margin-top:10px">
+						</table>
 					</p>
 				</div>
 				<div id="editForm" class="invisible">
@@ -59,6 +57,14 @@
 						<input type="button" id="bestaetigen" name="bestaetigen" value="Bestätigen" class="pure-button" />
 						<br />
 						<input type="button" id="verwerfen" name="verwerfen" value="Verwerfen" class="pure-button" style="margin-bottom:10px" />
+					</form>
+				</div>
+				<div id="addObject" class="invisible">
+					<form class="create-new pure-form">
+							<input type="text" class="text" value="" placeholder="Objektbeschreibung" id="addObjName">
+					</form>
+					<form method="post" class="buttons">
+							<input type="button" id="addObj" name="hinzufuegen" value="Hinzufügen" class="pure-button" />
 					</form>
 				</div>
 				<div id="buttons" class="buttons invisible">
