@@ -1,28 +1,35 @@
 (function () {
 	let request = new XMLHttpRequest();
 	request.addEventListener("load", () => { createList(request.response); });
+	request.open("GET", "http://localhost:8080/sessions");
 	request.responseType = "json";
 	request.send();
 
 	function createList(response) {
-		if (response.sessions[0] !== null) {
-			let i = 0;
-			while (response.sessions[i] !== null) {
-				if ((document.body.clientHeight + 100) >= (document.getElementById("table").clientHeight * 0.9)) {
+		for (var key in response.sessions) {
+			if (!response.sessions.hasOwnProperty(key)) { continue; }
+			if ((document.body.clientHeight + 100) >= (document.getElementById("table").clientHeight * 0.9)) {
+				let request2 = new XMLHttpRequest();
+				request2.addEventListener("load", () => {
 					let row = document.createElement("tr");
-					let cell = document.createElement("td");
-					cell.textContent = response.sessions[i].name;
-					row.appendChild(cell);
-					cell.textContent = response.sessions[i].name;
-					row.appendChild(cell);
-					cell.textContent = response.sessions[i].name;
-					row.appendChild(cell);
+					let cell1 = document.createElement("td");
+					let cell2 = document.createElement("td");
+					let cell3 = document.createElement("td");
+					cell1.textContent = request2.response.session.name;
+					row.appendChild(cell1);
+					cell2.textContent = request2.response.session.date;
+					row.appendChild(cell2);
+					cell3.textContent = request2.response.session.location;
+					row.appendChild(cell3);
+					row.onclick = select;
 					document.getElementById("table").appendChild(row);
-				}
-				else {
-					//Neue Seite mit Rest erzeugen
-				}
-				i++;
+				});
+				request2.open("GET", response.sessions[key].href);
+				request2.responseType = "json";
+				request2.send();
+			}
+			else {
+				//Neue Seite mit Rest erzeugen
 			}
 		}
 	}
@@ -32,7 +39,7 @@
 let table = document.getElementById("table");
 let selected = false;
 let selectedNr;
-let select = function () {
+function select() {
 	if (this.id !== "th" && this.className === "" && selected === false) {
 		this.className += "select";
 		selectedNr = this.rowIndex;
@@ -49,7 +56,7 @@ let select = function () {
 		selected = false;
 		selectedNr = 0;
 	}
-};
+}
 for (let i = 0; i < table.rows.length; i++) {
 	table.rows[i].onclick = select;
 }
@@ -72,7 +79,17 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 	let dateBuffer = row.cells[1].innerHTML;
 	let ortBuffer = row.cells[2].innerHTML;
 	btn1.addEventListener("click", () => {
-		//missing: Save Changes//missing: Save Changes
+		//weiß nicht wie data aussehen muss / was put erwartet
+		let data = {
+			name: row.cells[0].innerHTML,
+			date: row.cells[1].innerHTML,
+			location: row.cells[2].innerHTML
+		};
+		let request = new XMLHttpRequest();
+		request.addEventListener("load", () => { console.log(""); });
+		request.open("PUT", `http://localhost:8080/sessions/${selectedNr}`);
+		request.setRequestHeader("Content-Type", "application/json");
+		request.send(data);
 		row.contentEditable = "false";
 		del();
 	});
@@ -90,7 +107,7 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 	row.contentEditable = "true";
 });
 
-//Reihe hinzufügen Actionevent; HTML-Seite resetted nach 0,1sec wieder
+////Reihe hinzufügen Actionevent; HTML-Seite resetted nach 0,1sec wieder
 // let anlegenBtn = document.getElementById("sitzung-anlegen");
 // anlegenBtn.onclick = function () {
 // 	let row = document.createElement("tr");
