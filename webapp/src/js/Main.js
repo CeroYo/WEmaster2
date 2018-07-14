@@ -1,11 +1,17 @@
+const PORT = 8080;
+const BASE_URI = `http://localhost:${PORT}/`;
+
+let sessionsJSON = {};
+
 (function () {
 	let request = new XMLHttpRequest();
 	request.addEventListener("load", () => { createList(request.response); });
-	request.open("GET", "http://localhost:8080/sessions");
+	request.open("GET", BASE_URI + "sessions");
 	request.responseType = "json";
 	request.send();
 
 	function createList(response) {
+		sessionsJSON = response.sessions;
 		for (var key in response.sessions) {
 			if (!response.sessions.hasOwnProperty(key)) { continue; }
 			if ((document.body.clientHeight + 100) >= (document.getElementById("table").clientHeight * 0.9)) {
@@ -44,17 +50,22 @@ function select() {
 		this.className += "select";
 		selectedNr = this.rowIndex;
 		selected = true;
+		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
 	}
 	else if (this.id !== "th" && this.className === "" && selected === true) {
 		table.rows[selectedNr].className = "";
 		this.className += "select";
 		selectedNr = this.rowIndex;
 		selected = true;
+		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
 	}
 	else if (this.id !== "th" && this.className !== "" && selected === true) {
 		this.className = "";
 		selected = false;
 		selectedNr = 0;
+		hideSessionDetails();
 	}
 }
 for (let i = 0; i < table.rows.length; i++) {
@@ -87,7 +98,7 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 		};
 		let request = new XMLHttpRequest();
 		request.addEventListener("load", () => { console.log(""); });
-		request.open("PUT", `http://localhost:8080/sessions/${selectedNr}`);
+		request.open("PUT", BASE_URI + `sessions/${selectedNr}`);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.send(data);
 		row.contentEditable = "false";
@@ -106,6 +117,94 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 	}
 	row.contentEditable = "true";
 });
+
+//Sitzung hinzufügen
+let sitzungAnlegenBtn = document.getElementById("sitzung-anlegen");
+sitzungAnlegenBtn.addEventListener("click", () => {
+	let sitzungText = document.getElementById("sitzung").value;
+	let datumText = document.getElementById("datum").value;
+	let ortText = document.getElementById("ort").value;
+
+	console.log(sitzungText);
+	console.log(datumText);
+	console.log(ortText);
+
+	//Request senden
+	let request = new XMLHttpRequest();
+	//request.addEventListener("load", () => { sendNewSession(request.response); });
+	request.open("POST", BASE_URI + "sessions");
+	request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	request.responseType = "json";
+	request.send(`name=${sitzungText}&date=${datumText}&location=${ortText}`);
+
+	//Felder leeren
+	document.getElementById("sitzung").value = "";
+	document.getElementById("datum").value = "";
+	document.getElementById("ort").value = "";
+});
+
+//Sitzung anzeigen
+function showSessionDetails(sessionLink, sessionId) {
+	let request = new XMLHttpRequest();
+	request.addEventListener("load", () => {
+		let response = request.response;
+		getObservingObjectNames(sessionId);
+		document.getElementById("sitzungsName").innerHTML = response.session.name;
+		document.getElementById("sitzungsDatum").innerHTML = response.session.date;
+		document.getElementById("sitzungsOrt").innerHTML = response.session.location;
+		document.getElementById("sitzungsanzeige").classList.remove("invisible");
+	});
+	request.open("GET", sessionLink);
+	request.responseType = "json";
+	request.send();
+}
+
+//Sitzung verstecken
+function hideSessionDetails() {
+	document.getElementById("sitzungsanzeige").classList.add("invisible");
+	document.getElementById("sitzungsName").innerHTML = "";
+	document.getElementById("sitzungsDatum").innerHTML = "";
+	document.getElementById("sitzungsOrt").innerHTML = "";
+	document.getElementById("sitzungsObjekte").innerHTML = "";
+}
+
+//ObservingObject requesten und alle mit gewisser SessionId requesten
+function getObservingObjectNames(sessionId) {
+	//Vorher eventuell gesetzes Element leeren
+	document.getElementById("sitzungsObjekte").innerHTML = "";
+	//Liste anfragen
+	let request = new XMLHttpRequest();
+	request.addEventListener("load", () => {
+		//Einzelne Objekte anfragen
+		let observingObjects = request.response.observingObjects;
+		for (var key in observingObjects) {
+			if (!observingObjects.hasOwnProperty(key)) { continue; }
+
+			if (parseInt(observingObjects[key].sessionId) === parseInt(sessionId)) {
+				//Einzelne Objekte anfragen
+				let href = observingObjects[key].href;
+				let request2 = new XMLHttpRequest();
+				request2.addEventListener("load", () => {
+					//Objekte html-Seite hinzufügen
+					let observingObject = request2.response.observingObject;
+					document.getElementById("sitzungsObjekte").innerHTML += observingObject.name + "<br/>";
+				});
+				request2.open("GET", href);
+				request2.responseType = "json";
+				request2.send();
+			}
+		}
+	});
+	request.open("GET", `${BASE_URI}observingObjects`);
+	request.responseType = "json";
+	request.send();
+}
+
+//Sitzung löschen
+document.getElementById("sitzung-loeschen").onclick = deleteSession;
+function deleteSession() {
+	//
+}
 
 ////Reihe hinzufügen Actionevent; HTML-Seite resetted nach 0,1sec wieder
 // let anlegenBtn = document.getElementById("sitzung-anlegen");

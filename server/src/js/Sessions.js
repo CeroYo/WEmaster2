@@ -37,7 +37,6 @@ class Sessions {
 			// skip loop if the property is from prototype
 			if (!this.sessions.hasOwnProperty(key)) { continue; }
 
-			console.log(key + " === " + id + (key === id));
 			if (key === id) {
 				try {
 					let session = JSON.parse(fs.readFileSync(SESSION_PATH + id + ".json"));

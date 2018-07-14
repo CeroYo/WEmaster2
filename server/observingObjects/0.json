@@ -7,18 +7,18 @@
 	},
 	"_links": {
 		"self": {
-			"href": "http://localhost:8080/observingObject/:id"
+			"href": "http://localhost:8080/observingObjects/:id"
 		},
 		"list": {
-			"href": "http://localhost:8080/observingObject"
+			"href": "http://localhost:8080/observingObjects"
 		},
 		"update": {
 			"method": "PUT",
-			"href": "http://localhost:8080/observingObject/:id"
+			"href": "http://localhost:8080/observingObjects/:id"
 		},
 		"delete": {
 			"method": "DELETE",
-			"href": "http://localhost:8080/observingObject/:id"
+			"href": "http://localhost:8080/observingObjects/:id"
 		}
 	}
 }

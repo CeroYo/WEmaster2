@@ -1,5 +1,5 @@
 {
-	"id": 4,
+	"id": 6,
 	"observingObjects": {
 		"0": {
 			"href": "http://localhost:8080/observingObjects/0",
@@ -7,11 +7,19 @@
 		},
 		"1": {
 			"href": "http://localhost:8080/observingObjects/1",
-			"sessionId": 0
+			"sessionId": 1
 		},
 		"3": {
-			"href": "http://localhost:8080/observingObject/3",
+			"href": "http://localhost:8080/observingObjects/3",
 			"sessionId": 4
+		},
+		"4": {
+			"href": "http://localhost:8080/observingObjects/4",
+			"sessionId": 1
+		},
+		"5": {
+			"href": "http://localhost:8080/observingObjects/5",
+			"sessionId": 5
 		}
 	}
 }

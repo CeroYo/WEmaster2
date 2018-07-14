@@ -63,31 +63,31 @@ class ObservingObjects {
 		let objectToSave = {
 			observingObject: {
 				session: {
-					href: `${BASE_URI}/sessions/${sessionId}`,
-					name: `${name}`
+					href: `${BASE_URI}/sessions/${sessionId}`
 				},
-				_links: {
-					self: {
-						href: "http://localhost:8080/observingObject/:id"
-					},
-					list: {
-						href: "http://localhost:8080/observingObject"
-					},
-					update: {
-						method: "PUT",
-						href: "http://localhost:8080/observingObject/:id"
-					},
-					delete: {
-						method: "DELETE",
-						href: "http://localhost:8080/observingObject/:id"
-					}
+				name: `${name}`
+			},
+			_links: {
+				self: {
+					href: "http://localhost:8080/observingObjects/:id"
+				},
+				list: {
+					href: "http://localhost:8080/observingObjects"
+				},
+				update: {
+					method: "PUT",
+					href: "http://localhost:8080/observingObjects/:id"
+				},
+				delete: {
+					method: "DELETE",
+					href: "http://localhost:8080/observingObjects/:id"
 				}
 			}
 		};
 		this.saveObject(OBJECT_PATH + currentId + ".json", JSON.stringify(objectToSave, null, 4));
 
 		this.observingObjects[currentId] = {
-			href: `${BASE_URI}/observingObject/${currentId}`,
+			href: `${BASE_URI}/observingObjects/${currentId}`,
 			sessionId: sessionId
 		};
 		this.id++;
@@ -105,31 +105,31 @@ class ObservingObjects {
 		let objectToSave = {
 			observingObject: {
 				session: {
-					href: `${BASE_URI}/sessions/${sessionId}`,
-					name: `${name}`
+					href: `${BASE_URI}/sessions/${sessionId}`
 				},
-				_links: {
-					self: {
-						href: "http://localhost:8080/observingObject/:id"
-					},
-					list: {
-						href: "http://localhost:8080/observingObject"
-					},
-					update: {
-						method: "PUT",
-						href: "http://localhost:8080/observingObject/:id"
-					},
-					delete: {
-						method: "DELETE",
-						href: "http://localhost:8080/observingObject/:id"
-					}
+				name: `${name}`,
+			},
+			_links: {
+				self: {
+					href: "http://localhost:8080/observingObjects/:id"
+				},
+				list: {
+					href: "http://localhost:8080/observingObjects"
+				},
+				update: {
+					method: "PUT",
+					href: "http://localhost:8080/observingObjects/:id"
+				},
+				delete: {
+					method: "DELETE",
+					href: "http://localhost:8080/observingObjects/:id"
 				}
 			}
 		};
 		this.saveObject(OBJECT_PATH + id + ".json", JSON.stringify(objectToSave, null, 4));
 
 		this.observingObjects[id] = {
-			href: `${BASE_URI}/observingObject/${id}`,
+			href: `${BASE_URI}/observingObjects/${id}`,
 			sessionId: sessionId
 		};
 		let objectsToSave = {

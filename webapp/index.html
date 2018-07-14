@@ -14,8 +14,8 @@
 		<h1>Amateurastronomische Beobachtungssitzungen</h1>
 	</div>
 	<main id="output" class="center">
-		<div>
-			<div class="sitzungsliste pure-u-1 pure-u-md-3-5 pure-u-lg-3-5" style="float:left">
+		<div class="pure-g">
+			<div class="sitzungsliste pure-u-1 pure-u-md-3-5 pure-u-lg-3-5">
 				<table id="table" class="sitzungsliste-table pure-table pure-table-horizontal">
 					<thead>
 						<tr id="th">
@@ -26,27 +26,36 @@
 					</thead>
 				</table>
 			</div>
-			<div class="sitzungsliste pure-u-1 pure-u-md-3-5 pure-u-lg-3-5" style="position:fixed">
-				<table id="table" class="sitzungsliste-table pure-table pure-table-horizontal">
-					<thead>
-						<tr>							
-						</tr>
-					</thead>
-					<tr>					
-					</tr>
-				</table>
+			<div class="pure-u-1 pure-u-md-2-5 pure-u-lg-2-5 invisible" id="sitzungsanzeige">
+				<p>
+					<b>Sitzungsname:</b>
+					<span id="sitzungsName"></span>
+					<br/>
+					<b>Sitzungsdatum:</b>
+					<span id="sitzungsDatum"></span>
+					<br/>
+					<b>Sitzungsort:</b>
+					<span id="sitzungsOrt"></span>
+					<br/>
+					<b>Beobachtungsobjekte:</b>
+					<span id="sitzungsObjekte"></span>
+					<br/>
+				</p>
 			</div>
 		</div>
 		<div style="clear:both">
 			<div class="pure-u-1 pure-u-md-2-5 pure-u-lg-2-5 buttons" style="float:left">
 				<form method="post">
-					<input type="button" name="sitzung-loeschen" value="Sitzung l&ouml;schen" class="pure-button" />
+					<input type="button" id="sitzung-loeschen" name="sitzung-loeschen" value="Sitzung l&ouml;schen" class="pure-button" />
 					<br />
-					<input type="button" id="sitzung-bearbeiten" name="sitzung-bearbeiten" value="Sitzungseigenschaft bearbeiten" class="pure-button" />
+					<input type="button" id="sitzung-bearbeiten" name="sitzung-bearbeiten" value="Sitzungseigenschaft bearbeiten" class="pure-button"
+					/>
 					<br />
-					<input type="button" id="objekt-hinzufuegen" name="objekt-hinzufuegen" value="Beobachtungsobjekt hinzuf&uuml;gen" class="pure-button" />
+					<input type="button" id="objekt-hinzufuegen" name="objekt-hinzufuegen" value="Beobachtungsobjekt hinzuf&uuml;gen" class="pure-button"
+					/>
 					<br />
-					<input type="button" id="objekt-loeschen" name="objekt-loeschen" value="Beobachtungsobjekt l&ouml;schen" class="pure-button" />
+					<input type="button" id="objekt-loeschen" name="objekt-loeschen" value="Beobachtungsobjekt l&ouml;schen" class="pure-button"
+					/>
 					<br />
 					<input type="button" id="kartendienst" name="kartendienst" value="Sitzungsort anzeigen" class="pure-button" />
 					<br />
@@ -61,19 +70,15 @@
 					<input type="text" class="text" value="" placeholder="Datum" id="datum">
 					<br>
 					<input type="text" class="text" value="" placeholder="Ort" id="ort">
-					<br><br>
-					<input type="submit" style="width:13%" class="pure-u-1 pure-u-md-2-5 pure-u-lg-2-5" value="Erstellen" id="sitzung-anlegen">
+					<br>
+					<br>
+					<input type="button" style="width:13%" class="pure-u-1 pure-u-md-2-5 pure-u-lg-2-5" value="Erstellen" id="sitzung-anlegen">
 				</form>
 			</div>
 		</div>
-		
 	</main>
 	<div class="footer">
 	</div>
-	<div>
-		
-	</div>
-
 	<script language="javascript" type="text/javascript" src="./main.js"></script>
 </body>
 
