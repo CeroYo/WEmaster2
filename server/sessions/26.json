@@ -1,8 +1,14 @@
 {
     "session": {
+<<<<<<< HEAD:server/sessions/26.json
         "name": "ethrdetujrdtj",
         "date": "rtjrtj",
         "location": "rtjrtj"
+=======
+        "name": "asd",
+        "date": "123",
+        "location": "qwe"
+>>>>>>> 6ecc573f66512c0e4be5e8d373bceed2a73f644c:server/sessions/4.json
     },
     "_links": {
         "self": {

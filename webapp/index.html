@@ -45,7 +45,23 @@
 						<br/>
 					</p>
 				</div>
-				<div class="buttons">
+				<div id="editForm" class="invisible">
+					<form class="create-new pure-form">
+						<input type="text" class="text" value="" placeholder="Sitzung" id="editSitzung">
+						<br>
+						<input type="text" class="text" value="" placeholder="Datum" id="editDatum">
+						<br>
+						<input type="text" class="text" value="" placeholder="Ort" id="editOrt">
+						<br>
+						<input type="text" class="text" value="" placeholder="Objekt" id="editObjekt">
+					</form>
+					<form method="post" class="buttons">
+						<input type="button" id="bestaetigen" name="bestaetigen" value="Bestätigen" class="pure-button" />
+						<br />
+						<input type="button" id="verwerfen" name="verwerfen" value="Verwerfen" class="pure-button" style="margin-bottom:10px" />
+					</form>
+				</div>
+				<div id="buttons" class="buttons invisible">
 					<form method="post">
 						<input type="button" id="sitzung-loeschen" name="sitzung-loeschen" value="Sitzung l&ouml;schen" class="pure-button" />
 						<br />
