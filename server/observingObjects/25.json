@@ -1,9 +1,9 @@
 {
     "observingObject": {
         "session": {
-            "href": "http://localhost:8080/sessions/16"
+            "href": "http://localhost:8080/sessions/24"
         },
-        "name": "undefined"
+        "name": "loi"
     },
     "_links": {
         "self": {

@@ -21,10 +21,32 @@ function loadTable() {
 	}
 	function createList(response) {
 		sessionsJSON = response.sessions;
+
 		console.log(sessionsJSON);
-		for (var key in response.sessions) {
-			if (!response.sessions.hasOwnProperty(key)) { continue; }
-			if ((document.body.clientHeight) >= (document.getElementById("table").clientHeight * 0.9)) {
+		let sessionsArr = [];
+		for (let i = 0; i < Object.keys(sessionsJSON).length; i++) {
+			let keyValue = Object.keys(sessionsJSON)[i];
+			console.log(keyValue);
+			if (!sessionsJSON.hasOwnProperty(keyValue)) { continue; }
+			sessionsArr.push({ key: keyValue, json: sessionsJSON[keyValue] });
+		}
+
+		sessionsArr.sort(function (a, b) {
+			return a.key - b.key;
+		});
+
+		console.log(sessionsArr);
+
+		//Tabellenhöhe
+		let docHeight = window.innerHeight - 100;
+		let numberTableElements = Math.round(docHeight / document.getElementById("th").clientHeight);
+		let numberOfPages = Object.keys(sessionsJSON).length;
+		console.log(document.body.clientHeight);
+		console.log(numberTableElements);
+		console.log(numberOfPages);
+		let count = 0;
+		for (let i = 0; i < sessionsArr.length; i++) {
+			if (count < numberTableElements) {
 				let request2 = new XMLHttpRequest();
 				request2.addEventListener("load", () => {
 					let row = document.createElement("tr");
@@ -42,13 +64,13 @@ function loadTable() {
 					//document.createElement("<input type=\"button\" id=\"zurueck\" name=\"zurueck\" value=\"<\" class=\"pure-button pagination-button\" />");
 					//document.getElementById("table").parentElement.appendChild("<input type=\"button\" id=\"pageOne\" name=\"pageOne\" value=\"1\" class=\"pure-button pagination-button\" /><input type =\"button\" id=\"zurueck\" name=\"zurueck\" value=\">\" class=\"pure-button pagination-button\" />");
 				});
-				request2.open("GET", response.sessions[key].href);
+				console.log(i);
+				console.log(sessionsArr[i].json.href);
+				request2.open("GET", sessionsArr[i].json.href);
 				request2.responseType = "json";
 				request2.send();
 			}
-			else {
-				//Buttons für andere Seiten erzeugen
-			}
+			count++;
 		}
 	}
 }

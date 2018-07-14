@@ -1,9 +1,9 @@
 {
     "observingObject": {
         "session": {
-            "href": "http://localhost:8080/sessions/22"
+            "href": "http://localhost:8080/sessions/23"
         },
-        "name": "dvd"
+        "name": "zfz"
     },
     "_links": {
         "self": {
