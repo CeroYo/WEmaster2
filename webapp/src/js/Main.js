@@ -33,7 +33,7 @@ function loadTable() {
 					cell3.textContent = request2.response.session.location;
 					row.appendChild(cell3);
 					row.onclick = select;
-					//document.getElementById("table").appendChild(row);
+					document.getElementById("table").appendChild(row);
 					//document.createElement("<input type=\"button\" id=\"zurueck\" name=\"zurueck\" value=\"<\" class=\"pure-button pagination-button\" />");
 					//document.getElementById("table").parentElement.appendChild("<input type=\"button\" id=\"pageOne\" name=\"pageOne\" value=\"1\" class=\"pure-button pagination-button\" /><input type =\"button\" id=\"zurueck\" name=\"zurueck\" value=\">\" class=\"pure-button pagination-button\" />");
 				});
