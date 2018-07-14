@@ -6,6 +6,10 @@ let sessionsJSON = {};
 document.onload = loadTable();
 
 function loadTable() {
+	let docHeight = document.body.clientHeight - 100;
+	let numberTableElements = Math.round(docHeight / document.getElementById("th").clientHeight);
+	console.log(document.body.clientHeight);
+	console.log(numberTableElements);
 	//Tabelle leeren
 	document.getElementById("table").innerHTML = "<thead><tr id=\"th\"><th>Sitzung</th><th>Datum</th><th>Ort</th></tr></thead>";
 	//Sessiondaten anfragen
@@ -17,10 +21,12 @@ function loadTable() {
 
 	function createList(response) {
 		sessionsJSON = response.sessions;
-		console.log(sessionsJSON);
+		let numberOfPages = Object.keys(sessionsJSON).length;
+		console.log(numberOfPages);
+		let count = 0;
 		for (var key in response.sessions) {
 			if (!response.sessions.hasOwnProperty(key)) { continue; }
-			if ((document.body.clientHeight) >= (document.getElementById("table").clientHeight * 0.9)) {
+			if (count < numberTableElements) {
 				let request2 = new XMLHttpRequest();
 				request2.addEventListener("load", () => {
 					let row = document.createElement("tr");
@@ -35,8 +41,6 @@ function loadTable() {
 					row.appendChild(cell3);
 					row.onclick = select;
 					document.getElementById("table").appendChild(row);
-					//document.createElement("<input type=\"button\" id=\"zurueck\" name=\"zurueck\" value=\"<\" class=\"pure-button pagination-button\" />");
-					//document.getElementById("table").parentElement.appendChild("<input type=\"button\" id=\"pageOne\" name=\"pageOne\" value=\"1\" class=\"pure-button pagination-button\" /><input type =\"button\" id=\"zurueck\" name=\"zurueck\" value=\">\" class=\"pure-button pagination-button\" />");
 				});
 				request2.open("GET", response.sessions[key].href);
 				request2.responseType = "json";
@@ -47,6 +51,15 @@ function loadTable() {
 			}
 		}
 	}
+	for (let i = 0; i < document.getElementById("table").rows.length; i++) {
+		document.getElementById("table").rows[i].onclick = select;
+	}
+	createPaginationButton();
+}
+
+function createPaginationButton() {
+	//document.createElement("<input type=\"button\" id=\"zurueck\" name=\"zurueck\" value=\"<\" class=\"pure-button pagination-button\" />");
+	//document.getElementById("table").parentElement.appendChild("<input type=\"button\" id=\"pageOne\" name=\"pageOne\" value=\"1\" class=\"pure-button pagination-button\" /><input type =\"button\" id=\"zurueck\" name=\"zurueck\" value=\">\" class=\"pure-button pagination-button\" />");
 }
 
 // Selectioncolor; Funktioniert nicht bei Feldern mit vorher definierten Feldern
@@ -75,9 +88,6 @@ function select() {
 		selectedNr = 0;
 		hideSessionDetails();
 	}
-}
-for (let i = 0; i < table.rows.length; i++) {
-	table.rows[i].onclick = select;
 }
 
 //Sitzungseigenschaft bearbeiten
