@@ -102,8 +102,30 @@ function select() {
 		hideSessionDetails();
 	}
 }
-for (let i = 0; i < table.rows.length; i++) {
-	table.rows[i].onclick = select;
+// for (let i = 0; i < table.rows.length; i++) {
+// 	table.rows[i].onclick = select;
+// }
+
+let objTable = document.getElementById("sitzungsObjekte");
+let selectedObj = false;
+let selectedObjNr;
+function selectObj() {
+	if (this.id !== "th" && this.className === "" && selectedObj === false) {
+		this.className += "select";
+		selectedObjNr = this.rowIndex;
+		selectedObj = true;
+	}
+	else if (this.id !== "th" && this.className === "" && selectedObj === true) {
+		objTable.rows[selectedObjNr].className = "";
+		this.className += "select";
+		selectedObjNr = this.rowIndex;
+		selectedObj = true;
+	}
+	else if (this.id !== "th" && this.className !== "" && selectedObj === true) {
+		this.className = "";
+		selectedObj = false;
+		selectedObjNr = 0;
+	}
 }
 
 //Sitzungseigenschaft bearbeiten
@@ -156,12 +178,50 @@ document.getElementById("objekt-hinzufuegen").addEventListener("click", () => {
 		request.open("POST", BASE_URI + "observingObjects");
 		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		request.send(`name=${name}&sessionId=${sessionId}`);
-		getObservingObjectNames(sessionId);
+		// getObservingObjectNames(sessionId);
+		hideSessionDetails();
+		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
 		document.getElementById("addObject").classList.add("invisible");
 	});
 });
 
-//Beobachtungsobjekte
+//Beobachtungsobjekt löschen
+document.getElementById("objekt-loeschen").onclick = deleteObj;
+function deleteObj() {
+	let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+	let request = new XMLHttpRequest();
+	request.addEventListener("load", () => {
+		let observingObjects = request.response.observingObjects;
+		let i = 0;
+		let href;
+		for (var key in observingObjects) {
+			if (!observingObjects.hasOwnProperty(key)) { continue; }
+			if (parseInt(observingObjects[key].sessionId) === parseInt(sessionId)) {
+				href = observingObjects[key].href;
+				let request3 = new XMLHttpRequest();
+				request3.addEventListener("load", del(request3.response));
+				request3.open("GET", href);
+				request3.responseType = "json";
+				request3.send();
+			}
+		}
+		function del(response) {
+			if (response.name === document.getElementById("sitzungsObjekte").rows[selectedObjNr].value) {
+				let request2 = new XMLHttpRequest();
+				request2.addEventListener("load", () => {
+					hideSessionDetails();
+					// showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+				});
+				request2.open("DELETE", href);
+				request2.responseType = "json";
+				request2.send();
+			}
+		}
+	});
+	request.open("GET", `${BASE_URI}observingObjects`);
+	request.responseType = "json";
+	request.send();
+}
 
 //Sitzung hinzufügen
 let sitzungAnlegenBtn = document.getElementById("sitzung-anlegen");
@@ -228,13 +288,16 @@ function getObservingObjectNames(sessionId) {
 	request.addEventListener("load", () => {
 		//Einzelne Objekte anfragen
 		let observingObjects = request.response.observingObjects;
-		let thead = document.createElement("thead");
-		let row = document.createElement("tr");
-		let th = document.createElement("th");
-		th.innerHTML = "Beobachtungsobjekte";
-		row.appendChild(th);
-		thead.appendChild(row);
-		document.getElementById("sitzungsObjekte").appendChild(thead);
+		// if(document.getElementById("sitzungsObjekte").rows[0])
+		if (document.getElementById("sitzungsObjekte").innerHTML === "") {
+			let thead = document.createElement("thead");
+			let row = document.createElement("tr");
+			let th = document.createElement("th");
+			th.innerHTML = "Beobachtungsobjekte";
+			row.appendChild(th);
+			thead.appendChild(row);
+			document.getElementById("sitzungsObjekte").appendChild(thead);
+		}
 		for (var key in observingObjects) {
 			if (!observingObjects.hasOwnProperty(key)) { continue; }
 
@@ -249,6 +312,7 @@ function getObservingObjectNames(sessionId) {
 					let text = document.createElement("td");
 					text.innerHTML = observingObject.name;
 					row.appendChild(text);
+					row.addEventListener("click", selectObj);
 					document.getElementById("sitzungsObjekte").appendChild(row);
 					// document.getElementById("sitzungsObjekte").innerHTML += observingObject.name + "<br/>";
 				});
@@ -275,45 +339,3 @@ function deleteSession() {
 	request.responseType = "json";
 	request.send();
 }
-
-////Reihe hinzufügen Actionevent; HTML-Seite resetted nach 0,1sec wieder
-// let anlegenBtn = document.getElementById("sitzung-anlegen");
-// anlegenBtn.onclick = function () {
-// 	let row = document.createElement("tr");
-// 	let cell = document.createElement("td");
-// 	cell.textContent = document.getElementById("sitzung").innerHTML;
-// 	row.appendChild(cell);
-// 	cell = document.createElement("td");
-// 	cell.textContent = document.getElementById("datum").innerHTML;
-// 	row.appendChild(cell);
-// 	cell = document.createElement("td");
-// 	cell.textContent = document.getElementById("ort").innerHTML;
-// 	row.appendChild(cell);
-// 	document.getElementById("table").appendChild(row);
-// };
-
-// Anderer Versuch für Selectioncolor
-// let table = document.getElementById("table");
-// let selected = false;
-// let selectedNr;
-
-// let select = function () {
-// 	if (this.style.backgroundColor !== "yellow" && selected === false) {
-// 		this.style.backgroundColor = "yellow";
-// 		selectedNr = this.rowIndex;
-// 		selected = true;
-// 	}
-// 	else if (this.style.backgroundColor !== "yellow" && selected === true) {
-// 		table.rows[selectedNr].style.backgroundColor = "";
-// 		this.style.backgroundColor = "yellow";
-// 		selectedNr = this.rowIndex;
-// 		selected = true;
-// 	}
-// 	else {
-// 		this.style.backgroundColor = "";
-// 		selected = false;
-// 	}
-// };
-// for (let i = 0; i < table.rows.length; i++) {
-// 	table.rows[i].onclick = select;
-// }
