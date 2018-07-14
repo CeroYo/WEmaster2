@@ -2,12 +2,16 @@ const PORT = 8080;
 const BASE_URI = `http://localhost:${PORT}/`;
 
 let sessionsJSON = {};
+let sessionsArr = [];
+let page = 1;
+let numberOfPages = 1;
+let numberTableElements = 0;
 
-document.onload = loadTable();
+document.onload = loadTable(page);
 
-function loadTable() {
+function loadTable(page) {
 	//Tabelle leeren
-	document.getElementById("table").innerHTML = "<thead><tr id=\"th\"><th>Sitzung</th><th>Datum</th><th>Ort</th></tr></thead>";
+	document.getElementById("table").parentElement.innerHTML = "<table id=\"table\" class=\"sitzungsliste-table pure-table pure-table-horizontal\"><thead><tr id=\"th\"><th>Sitzung</th><th>Datum</th><th>Ort</th></tr></thead></table>";
 	//Sessiondaten anfragen
 	let request = new XMLHttpRequest();
 	request.addEventListener("load", () => createList(request.response));
@@ -21,12 +25,11 @@ function loadTable() {
 	}
 	function createList(response) {
 		sessionsJSON = response.sessions;
-
 		console.log(sessionsJSON);
-		let sessionsArr = [];
+
+		sessionsArr = [];
 		for (let i = 0; i < Object.keys(sessionsJSON).length; i++) {
 			let keyValue = Object.keys(sessionsJSON)[i];
-			console.log(keyValue);
 			if (!sessionsJSON.hasOwnProperty(keyValue)) { continue; }
 			sessionsArr.push({ key: keyValue, json: sessionsJSON[keyValue] });
 		}
@@ -38,41 +41,86 @@ function loadTable() {
 		console.log(sessionsArr);
 
 		//Tabellenhöhe
-		let docHeight = window.innerHeight - 100;
-		let numberTableElements = Math.round(docHeight / document.getElementById("th").clientHeight);
-		let numberOfPages = Object.keys(sessionsJSON).length;
+		let docHeight = window.innerHeight - 200;
+		numberTableElements = Math.round(docHeight / document.getElementById("th").clientHeight);
+		numberOfPages = Math.ceil(sessionsArr.length / numberTableElements);
 		console.log(document.body.clientHeight);
 		console.log(numberTableElements);
 		console.log(numberOfPages);
-		let count = 0;
-		for (let i = 0; i < sessionsArr.length; i++) {
-			if (count < numberTableElements) {
-				let request2 = new XMLHttpRequest();
-				request2.addEventListener("load", () => {
-					let row = document.createElement("tr");
-					let cell1 = document.createElement("td");
-					let cell2 = document.createElement("td");
-					let cell3 = document.createElement("td");
-					cell1.textContent = request2.response.session.name;
-					row.appendChild(cell1);
-					cell2.textContent = request2.response.session.date;
-					row.appendChild(cell2);
-					cell3.textContent = request2.response.session.location;
-					row.appendChild(cell3);
-					row.addEventListener("click", select);
-					document.getElementById("table").appendChild(row);
-					//document.createElement("<input type=\"button\" id=\"zurueck\" name=\"zurueck\" value=\"<\" class=\"pure-button pagination-button\" />");
-					//document.getElementById("table").parentElement.appendChild("<input type=\"button\" id=\"pageOne\" name=\"pageOne\" value=\"1\" class=\"pure-button pagination-button\" /><input type =\"button\" id=\"zurueck\" name=\"zurueck\" value=\">\" class=\"pure-button pagination-button\" />");
-				});
-				console.log(i);
-				console.log(sessionsArr[i].json.href);
-				request2.open("GET", sessionsArr[i].json.href);
-				request2.responseType = "json";
-				request2.send();
-			}
-			count++;
+		for (let i = (page - 1) * numberTableElements; (i < sessionsArr.length) && (i < page * numberTableElements); i++) {
+			let b = true;
+			let request2 = new XMLHttpRequest();
+			request2.addEventListener("load", () => {
+				let row = document.createElement("tr");
+				let cell1 = document.createElement("td");
+				let cell2 = document.createElement("td");
+				let cell3 = document.createElement("td");
+				cell1.textContent = request2.response.session.name;
+				row.appendChild(cell1);
+				cell2.textContent = request2.response.session.date;
+				row.appendChild(cell2);
+				cell3.textContent = request2.response.session.location;
+				row.appendChild(cell3);
+				row.addEventListener("click", select);
+				document.getElementById("table").appendChild(row);
+				b = false;
+				console.log(request2.response.session.name + " hinzugefügt");
+			});
+			request2.open("GET", sessionsArr[i].json.href);
+			request2.responseType = "json";
+			request2.send();
+
+			let startTime = new Date().getTime();
+			let timeout = 50000000;
+			//while (b) {
+			//warten bis datei angekommen oder Timeout
+			//b = true;
+			//timeout -= (new Date().getTime() - startTime);
+			//console.log("time: " + timeout);
+			//}
 		}
+		createPaginationButton(numberOfPages);
 	}
+}
+
+function createPaginationButton(numberOfPages) {
+	let prev = document.createElement("input");
+	prev.setAttribute("type", "button");
+	prev.setAttribute("id", "prev");
+	prev.setAttribute("value", "<");
+	prev.setAttribute("class", "pure-button pagination-button");
+	document.getElementById("table").parentElement.appendChild(prev);
+	prev.onclick = function () { setNewPage(page - 1); };
+
+	for (let i = 1; i <= numberOfPages; i++) {
+		let btn = document.createElement("input");
+		btn.setAttribute("type", "button");
+		btn.setAttribute("id", `page${i}`);
+		btn.setAttribute("value", `${i}`);
+		btn.setAttribute("class", "pure-button pagination-button");
+		if (i === page) {
+			btn.classList.add("pagination-button-active");
+		}
+		document.getElementById("table").parentElement.appendChild(btn);
+		btn.onclick = function () { setNewPage(i); };
+	}
+
+	let next = document.createElement("input");
+	next.setAttribute("type", "button");
+	next.setAttribute("id", "next");
+	next.setAttribute("value", ">");
+	next.setAttribute("class", "pure-button pagination-button");
+	document.getElementById("table").parentElement.appendChild(next);
+	next.onclick = function () { setNewPage(page + 1); };
+}
+
+function setNewPage(i) {
+	if (i > numberOfPages || i < 1) {
+		return;
+	}
+	page = i;
+	//document.getElementById("table").rows[selectedNr].click();
+	loadTable(page);
 }
 
 // Selectioncolor; Funktioniert nicht bei Feldern mit vorher definierten Feldern
@@ -84,16 +132,16 @@ function select() {
 		this.className += "select";
 		selectedNr = this.rowIndex;
 		selected = true;
-		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
-		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+		let sessionId = Object.keys(sessionsJSON)[(selectedNr - 1) + ((page - 1) * numberTableElements)];
+		showSessionDetails(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].json.href, sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].key);
 	}
 	else if (this.id !== "th" && this.className === "" && selected === true) {
 		table.rows[selectedNr].className = "";
 		this.className += "select";
 		selectedNr = this.rowIndex;
 		selected = true;
-		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
-		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+		let sessionId = Object.keys(sessionsJSON)[(selectedNr - 1) + ((page - 1) * numberTableElements)];
+		showSessionDetails(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].json.href, sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].key);
 	}
 	else if (this.id !== "th" && this.className !== "" && selected === true) {
 		this.className = "";
@@ -101,6 +149,7 @@ function select() {
 		selectedNr = 0;
 		hideSessionDetails();
 	}
+<<<<<<< HEAD
 }
 // for (let i = 0; i < table.rows.length; i++) {
 // 	table.rows[i].onclick = select;
@@ -126,6 +175,12 @@ function selectObj() {
 		selectedObj = false;
 		selectedObjNr = 0;
 	}
+=======
+	console.log(selectedNr);
+	console.log((selectedNr - 1) + ((page - 1) * numberTableElements));
+	console.log(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].json.href);
+	console.log(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].key);
+>>>>>>> ce61aa0c84c316d3a66be3ec3b2a82965983a39f
 }
 
 //Sitzungseigenschaft bearbeiten
@@ -151,7 +206,7 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 		request.send(`name=${sitzungText}&date=${datumText}&location=${ortText}&object=${objectText}`);
 
 		hide();
-		loadTable();
+		loadTable(page);
 		document.getElementById("editForm").classList.add("invisible");
 	});
 
@@ -231,14 +286,10 @@ sitzungAnlegenBtn.addEventListener("click", () => {
 	let ortText = document.getElementById("ort").value;
 	let objectText = document.getElementById("objekt").value;
 
-	console.log(sitzungText);
-	console.log(datumText);
-	console.log(ortText);
-
 	//Request senden
 	let request = new XMLHttpRequest();
 	request.open("POST", BASE_URI + "sessions");
-	request.addEventListener("load", () => loadTable());
+	request.addEventListener("load", () => loadTable(page));
 	request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	request.responseType = "json";
 	request.send(`name=${sitzungText}&date=${datumText}&location=${ortText}&object=${objectText}`);
@@ -335,7 +386,10 @@ function deleteSession() {
 	//Request senden
 	let request = new XMLHttpRequest();
 	request.open("DELETE", BASE_URI + `sessions/${sessionId}`);
-	request.addEventListener("load", () => loadTable());
+	request.addEventListener("load", () => {
+		loadTable(page);
+		hideSessionDetails();
+	});
 	request.responseType = "json";
 	request.send();
 }
