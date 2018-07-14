@@ -150,7 +150,6 @@ function select() {
 		selectedNr = 0;
 		hideSessionDetails();
 	}
-<<<<<<< HEAD
 }
 // for (let i = 0; i < table.rows.length; i++) {
 // 	table.rows[i].onclick = select;
@@ -176,12 +175,6 @@ function selectObj() {
 		selectedObj = false;
 		selectedObjNr = 0;
 	}
-=======
-	console.log(selectedNr);
-	console.log((selectedNr - 1) + ((page - 1) * numberTableElements));
-	console.log(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].json.href);
-	console.log(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].key);
->>>>>>> ce61aa0c84c316d3a66be3ec3b2a82965983a39f
 }
 
 //Sitzungseigenschaft bearbeiten
@@ -230,14 +223,15 @@ document.getElementById("objekt-hinzufuegen").addEventListener("click", () => {
 		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
 		let name = document.getElementById("addObjName").value;
 		let request = new XMLHttpRequest();
-		request.addEventListener("load", () => { console.log(""); });
+		request.addEventListener("load", () => {
+			hideSessionDetails();
+			showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+			document.getElementById("addObject").classList.add("invisible");
+		});
 		request.open("POST", BASE_URI + "observingObjects");
 		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		request.send(`name=${name}&sessionId=${sessionId}`);
-		// getObservingObjectNames(sessionId);
-		hideSessionDetails();
-		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
-		document.getElementById("addObject").classList.add("invisible");
+		// getObservingObjectNames(sessionId);	
 	});
 });
 
@@ -343,9 +337,7 @@ function getObservingObjectNames(sessionId) {
 	request.addEventListener("load", () => {
 		//Einzelne Objekte anfragen
 		let observingObjects = request.response.observingObjects;
-<<<<<<< HEAD
 		let selectedObjects = [];
-=======
 		// if(document.getElementById("sitzungsObjekte").rows[0])
 		if (document.getElementById("sitzungsObjekte").innerHTML === "") {
 			let thead = document.createElement("thead");
@@ -356,7 +348,6 @@ function getObservingObjectNames(sessionId) {
 			thead.appendChild(row);
 			document.getElementById("sitzungsObjekte").appendChild(thead);
 		}
->>>>>>> 04885eece0de65d721ba8bffcda62fbcaf70f86e
 		for (var key in observingObjects) {
 			if (!observingObjects.hasOwnProperty(key)) { continue; }
 
@@ -367,10 +358,8 @@ function getObservingObjectNames(sessionId) {
 				request2.addEventListener("load", () => {
 					//Objekte html-Seite hinzufügen
 					let observingObject = request2.response.observingObject;
-<<<<<<< HEAD
 					document.getElementById("sitzungsObjekte").innerHTML += observingObject.name + "<br/>";
 					selectedObjects.push(observingObject.name);
-=======
 					let row = document.createElement("tr");
 					let text = document.createElement("td");
 					text.innerHTML = observingObject.name;
@@ -378,7 +367,6 @@ function getObservingObjectNames(sessionId) {
 					row.addEventListener("click", selectObj);
 					document.getElementById("sitzungsObjekte").appendChild(row);
 					// document.getElementById("sitzungsObjekte").innerHTML += observingObject.name + "<br/>";
->>>>>>> 04885eece0de65d721ba8bffcda62fbcaf70f86e
 				});
 				request2.open("GET", href);
 				request2.responseType = "json";
@@ -407,7 +395,6 @@ function deleteSession() {
 	request.responseType = "json";
 	request.send();
 }
-<<<<<<< HEAD
 
 //Karte anfragen
 document.getElementById("kartendienst").onclick = getMap;
@@ -488,5 +475,3 @@ function print() {
 // for (let i = 0; i < table.rows.length; i++) {
 // 	table.rows[i].onclick = select;
 // }
-=======
->>>>>>> 04885eece0de65d721ba8bffcda62fbcaf70f86e
