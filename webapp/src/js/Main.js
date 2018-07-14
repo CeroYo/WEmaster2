@@ -14,7 +14,11 @@ function loadTable() {
 	request.open("GET", BASE_URI + "sessions");
 	request.responseType = "json";
 	request.send();
-
+	if (!document.getElementById("sitzungsanzeige").classList.contains("invisible")) {
+		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+		hideSessionDetails();
+		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+	}
 	function createList(response) {
 		sessionsJSON = response.sessions;
 		console.log(sessionsJSON);
@@ -86,13 +90,16 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 	let row = document.getElementById("table").rows[selectedNr];
 	let btn1 = document.getElementById("bestaetigen");
 	let btn2 = document.getElementById("verwerfen");
+	document.getElementById("editSitzung").value = document.getElementById("sitzungsName").innerHTML;
+	document.getElementById("editDatum").value = document.getElementById("sitzungsDatum").innerHTML;
+	document.getElementById("editOrt").value = document.getElementById("sitzungsOrt").innerHTML;
+	document.getElementById("editObjekt").value = document.getElementById("sitzungsObjekte").innerHTML;
 	btn1.addEventListener("click", () => {
 		let nr = Object.keys(sessionsJSON)[selectedNr - 1];
 		let sitzungText = document.getElementById("editSitzung").value;
 		let datumText = document.getElementById("editDatum").value;
 		let ortText = document.getElementById("editOrt").value;
 		let objectText = document.getElementById("editObjekt").value;
-		console.log(sitzungText + datumText + ortText + objectText);
 		let request = new XMLHttpRequest();
 		request.addEventListener("load", () => { console.log(""); });
 		request.open("PUT", BASE_URI + `sessions/${nr}`);
@@ -115,6 +122,24 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 		document.getElementById("editForm").classList.add("invisible");
 	}
 });
+
+//Beobachtungsobjekt hinzufügen
+document.getElementById("objekt-hinzufuegen").addEventListener("click", () => {
+	document.getElementById("addObject").classList.remove("invisible");
+	document.getElementById("addObj").addEventListener("click", () => {
+		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+		let name = document.getElementById("addObjName").value;
+		let request = new XMLHttpRequest();
+		request.addEventListener("load", () => { console.log(""); });
+		request.open("POST", BASE_URI + "observingObjects");
+		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		request.send(`name=${name}&sessionId=${sessionId}`);
+		getObservingObjectNames(sessionId);
+		document.getElementById("addObject").classList.add("invisible");
+	});
+});
+
+//Beobachtungsobjekte
 
 //Sitzung hinzufügen
 let sitzungAnlegenBtn = document.getElementById("sitzung-anlegen");
@@ -181,6 +206,13 @@ function getObservingObjectNames(sessionId) {
 	request.addEventListener("load", () => {
 		//Einzelne Objekte anfragen
 		let observingObjects = request.response.observingObjects;
+		let thead = document.createElement("thead");
+		let row = document.createElement("tr");
+		let th = document.createElement("th");
+		th.innerHTML = "Beobachtungsobjekte";
+		row.appendChild(th);
+		thead.appendChild(row);
+		document.getElementById("sitzungsObjekte").appendChild(thead);
 		for (var key in observingObjects) {
 			if (!observingObjects.hasOwnProperty(key)) { continue; }
 
@@ -191,7 +223,12 @@ function getObservingObjectNames(sessionId) {
 				request2.addEventListener("load", () => {
 					//Objekte html-Seite hinzufügen
 					let observingObject = request2.response.observingObject;
-					document.getElementById("sitzungsObjekte").innerHTML += observingObject.name + "<br/>";
+					let row = document.createElement("tr");
+					let text = document.createElement("td");
+					text.innerHTML = observingObject.name;
+					row.appendChild(text);
+					document.getElementById("sitzungsObjekte").appendChild(row);
+					// document.getElementById("sitzungsObjekte").innerHTML += observingObject.name + "<br/>";
 				});
 				request2.open("GET", href);
 				request2.responseType = "json";
