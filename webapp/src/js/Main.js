@@ -3,7 +3,12 @@ const BASE_URI = `http://localhost:${PORT}/`;
 
 let sessionsJSON = {};
 
-(function () {
+document.onload = loadTable();
+
+function loadTable() {
+	//Tabelle leeren
+	document.getElementById("table").innerHTML = "<thead><tr id=\"th\"><th>Sitzung</th><th>Datum</th><th>Ort</th></tr></thead>";
+	//Sessiondaten anfragen
 	let request = new XMLHttpRequest();
 	request.addEventListener("load", () => { createList(request.response); });
 	request.open("GET", BASE_URI + "sessions");
@@ -14,7 +19,7 @@ let sessionsJSON = {};
 		sessionsJSON = response.sessions;
 		for (var key in response.sessions) {
 			if (!response.sessions.hasOwnProperty(key)) { continue; }
-			if ((document.body.clientHeight + 100) >= (document.getElementById("table").clientHeight * 0.9)) {
+			if ((document.body.clientHeight) >= (document.getElementById("table").clientHeight * 0.9)) {
 				let request2 = new XMLHttpRequest();
 				request2.addEventListener("load", () => {
 					let row = document.createElement("tr");
@@ -28,18 +33,20 @@ let sessionsJSON = {};
 					cell3.textContent = request2.response.session.location;
 					row.appendChild(cell3);
 					row.onclick = select;
-					document.getElementById("table").appendChild(row);
+					//document.getElementById("table").appendChild(row);
+					//document.createElement("<input type=\"button\" id=\"zurueck\" name=\"zurueck\" value=\"<\" class=\"pure-button pagination-button\" />");
+					//document.getElementById("table").parentElement.appendChild("<input type=\"button\" id=\"pageOne\" name=\"pageOne\" value=\"1\" class=\"pure-button pagination-button\" /><input type =\"button\" id=\"zurueck\" name=\"zurueck\" value=\">\" class=\"pure-button pagination-button\" />");
 				});
 				request2.open("GET", response.sessions[key].href);
 				request2.responseType = "json";
 				request2.send();
 			}
 			else {
-				//Neue Seite mit Rest erzeugen
+				//Buttons für andere Seiten erzeugen
 			}
 		}
 	}
-})();
+}
 
 // Selectioncolor; Funktioniert nicht bei Feldern mit vorher definierten Feldern
 let table = document.getElementById("table");
@@ -124,6 +131,7 @@ sitzungAnlegenBtn.addEventListener("click", () => {
 	let sitzungText = document.getElementById("sitzung").value;
 	let datumText = document.getElementById("datum").value;
 	let ortText = document.getElementById("ort").value;
+	let objectText = document.getElementById("object").value;
 
 	console.log(sitzungText);
 	console.log(datumText);
@@ -131,11 +139,11 @@ sitzungAnlegenBtn.addEventListener("click", () => {
 
 	//Request senden
 	let request = new XMLHttpRequest();
-	//request.addEventListener("load", () => { sendNewSession(request.response); });
 	request.open("POST", BASE_URI + "sessions");
+	request.addEventListener("load", () => { loadTable(); });
 	request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	request.responseType = "json";
-	request.send(`name=${sitzungText}&date=${datumText}&location=${ortText}`);
+	request.send(`name=${sitzungText}&date=${datumText}&location=${ortText}&object=${objectText}`);
 
 	//Felder leeren
 	document.getElementById("sitzung").value = "";
@@ -203,7 +211,7 @@ function getObservingObjectNames(sessionId) {
 //Sitzung löschen
 document.getElementById("sitzung-loeschen").onclick = deleteSession;
 function deleteSession() {
-	//
+	console.log("bin hier");
 }
 
 ////Reihe hinzufügen Actionevent; HTML-Seite resetted nach 0,1sec wieder

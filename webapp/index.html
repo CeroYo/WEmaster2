@@ -26,43 +26,48 @@
 					</thead>
 				</table>
 			</div>
-			<div class="pure-u-1 pure-u-md-2-5 pure-u-lg-2-5 invisible" id="sitzungsanzeige">
-				<p>
-					<b>Sitzungsname:</b>
-					<span id="sitzungsName"></span>
-					<br/>
-					<b>Sitzungsdatum:</b>
-					<span id="sitzungsDatum"></span>
-					<br/>
-					<b>Sitzungsort:</b>
-					<span id="sitzungsOrt"></span>
-					<br/>
-					<b>Beobachtungsobjekte:</b>
-					<span id="sitzungsObjekte"></span>
-					<br/>
-				</p>
+			<div class="pure-u-1 pure-u-md-2-5 pure-u-lg-2-5">
+				<div class="invisible" id="sitzungsanzeige">
+					<p>
+						<h4>Ausgewählte Sitzung</h4>
+						<br/>
+						<b>Sitzungsname:</b>
+						<span id="sitzungsName"></span>
+						<br/>
+						<b>Sitzungsdatum:</b>
+						<span id="sitzungsDatum"></span>
+						<br/>
+						<b>Sitzungsort:</b>
+						<span id="sitzungsOrt"></span>
+						<br/>
+						<b>Beobachtungsobjekte:</b>
+						<span id="sitzungsObjekte"></span>
+						<br/>
+					</p>
+				</div>
+				<div class="buttons">
+					<form method="post">
+						<input type="button" id="sitzung-loeschen" name="sitzung-loeschen" value="Sitzung l&ouml;schen" class="pure-button" />
+						<br />
+						<input type="button" id="sitzung-bearbeiten" name="sitzung-bearbeiten" value="Sitzungseigenschaft bearbeiten" class="pure-button"
+						/>
+						<br />
+						<input type="button" id="objekt-hinzufuegen" name="objekt-hinzufuegen" value="Beobachtungsobjekt hinzuf&uuml;gen" class="pure-button"
+						/>
+						<br />
+						<input type="button" id="objekt-loeschen" name="objekt-loeschen" value="Beobachtungsobjekt l&ouml;schen" class="pure-button"
+						/>
+						<br />
+						<input type="button" id="kartendienst" name="kartendienst" value="Sitzungsort anzeigen" class="pure-button" />
+						<br />
+						<input type="button" id="sitzung-drucken" name="sitzung-drucken" value="Sitzung drucken" class="pure-button" />
+						<br />
+					</form>
+				</div>
 			</div>
 		</div>
-		<div style="clear:both">
-			<div class="pure-u-1 pure-u-md-2-5 pure-u-lg-2-5 buttons" style="float:left">
-				<form method="post">
-					<input type="button" id="sitzung-loeschen" name="sitzung-loeschen" value="Sitzung l&ouml;schen" class="pure-button" />
-					<br />
-					<input type="button" id="sitzung-bearbeiten" name="sitzung-bearbeiten" value="Sitzungseigenschaft bearbeiten" class="pure-button"
-					/>
-					<br />
-					<input type="button" id="objekt-hinzufuegen" name="objekt-hinzufuegen" value="Beobachtungsobjekt hinzuf&uuml;gen" class="pure-button"
-					/>
-					<br />
-					<input type="button" id="objekt-loeschen" name="objekt-loeschen" value="Beobachtungsobjekt l&ouml;schen" class="pure-button"
-					/>
-					<br />
-					<input type="button" id="kartendienst" name="kartendienst" value="Sitzungsort anzeigen" class="pure-button" />
-					<br />
-					<input type="button" id="sitzung-drucken" name="sitzung-drucken" value="Sitzung drucken" class="pure-button" />
-					<br />
-				</form>
-			</div>
+		</div>
+		<div>
 			<div class="create-new pure-form">
 				<form>
 					<input type="text" class="text" value="" placeholder="Sitzung" id="sitzung">
@@ -71,6 +76,7 @@
 					<br>
 					<input type="text" class="text" value="" placeholder="Ort" id="ort">
 					<br>
+					<input type="text" class="text" value="" placeholder="Objekt" id="objekt">
 					<br>
 					<input type="button" style="width:13%" class="pure-u-1 pure-u-md-2-5 pure-u-lg-2-5" value="Erstellen" id="sitzung-anlegen">
 				</form>

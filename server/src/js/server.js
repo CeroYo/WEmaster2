@@ -99,7 +99,7 @@ app.delete("/sessions/:id", (request, response) => {
 app.post("/sessions", (request, response) => {
 	let newSession = request.body;
 
-	if (!(newSession.name && newSession.date && newSession.location)) {
+	if (!(newSession.name && newSession.date && newSession.location && newSession.object)) {
 		response.sendStatus(400);
 	}
 	else {
