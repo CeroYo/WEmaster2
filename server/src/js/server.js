@@ -103,7 +103,7 @@ app.post("/sessions", (request, response) => {
 		response.sendStatus(400);
 	}
 	else {
-		let id = Sessions.create(newSession.name, newSession.date, newSession.location, newSession.observingObject);
+		let id = Sessions.create(newSession.name, newSession.date, newSession.location, newSession.object);
 		response.location(`${BASE_URI}/sessions/${id}`).status(201).json(createSessionResponseBody(id));
 	}
 });
