@@ -237,7 +237,7 @@ document.getElementById("objekt-hinzufuegen").addEventListener("click", () => {
 		request.open("POST", BASE_URI + "observingObjects");
 		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		request.send(`name=${name}&sessionId=${sessionId}`);
-		// getObservingObjectNames(sessionId);	
+		// getObservingObjectNames(sessionId);
 	});
 });
 function addObjEvent() {
