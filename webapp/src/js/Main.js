@@ -10,13 +10,14 @@ function loadTable() {
 	document.getElementById("table").innerHTML = "<thead><tr id=\"th\"><th>Sitzung</th><th>Datum</th><th>Ort</th></tr></thead>";
 	//Sessiondaten anfragen
 	let request = new XMLHttpRequest();
-	request.addEventListener("load", () => { createList(request.response); });
+	request.addEventListener("load", () => createList(request.response));
 	request.open("GET", BASE_URI + "sessions");
 	request.responseType = "json";
 	request.send();
 
 	function createList(response) {
 		sessionsJSON = response.sessions;
+		console.log(sessionsJSON);
 		for (var key in response.sessions) {
 			if (!response.sessions.hasOwnProperty(key)) { continue; }
 			if ((document.body.clientHeight) >= (document.getElementById("table").clientHeight * 0.9)) {
@@ -79,11 +80,6 @@ for (let i = 0; i < table.rows.length; i++) {
 	table.rows[i].onclick = select;
 }
 
-//Sitzung löschen
-// document.getElementById("sitzung-loeschen").addEventListener("click", () => {
-// 	//
-// });
-
 //Sitzungseigenschaft bearbeiten
 document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 	document.getElementById("editForm").classList.remove("invisible");
@@ -126,7 +122,7 @@ sitzungAnlegenBtn.addEventListener("click", () => {
 	let sitzungText = document.getElementById("sitzung").value;
 	let datumText = document.getElementById("datum").value;
 	let ortText = document.getElementById("ort").value;
-	let objectText = document.getElementById("object").value;
+	let objectText = document.getElementById("objekt").value;
 
 	console.log(sitzungText);
 	console.log(datumText);
@@ -135,7 +131,7 @@ sitzungAnlegenBtn.addEventListener("click", () => {
 	//Request senden
 	let request = new XMLHttpRequest();
 	request.open("POST", BASE_URI + "sessions");
-	request.addEventListener("load", () => { loadTable(); });
+	request.addEventListener("load", () => loadTable());
 	request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	request.responseType = "json";
 	request.send(`name=${sitzungText}&date=${datumText}&location=${ortText}&object=${objectText}`);
@@ -144,6 +140,7 @@ sitzungAnlegenBtn.addEventListener("click", () => {
 	document.getElementById("sitzung").value = "";
 	document.getElementById("datum").value = "";
 	document.getElementById("ort").value = "";
+	document.getElementById("objekt").value = "";
 });
 
 //Sitzung anzeigen
@@ -210,7 +207,14 @@ function getObservingObjectNames(sessionId) {
 //Sitzung löschen
 document.getElementById("sitzung-loeschen").onclick = deleteSession;
 function deleteSession() {
-	console.log("bin hier");
+	let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+
+	//Request senden
+	let request = new XMLHttpRequest();
+	request.open("DELETE", BASE_URI + `sessions/${sessionId}`);
+	request.addEventListener("load", () => loadTable());
+	request.responseType = "json";
+	request.send();
 }
 
 ////Reihe hinzufügen Actionevent; HTML-Seite resetted nach 0,1sec wieder

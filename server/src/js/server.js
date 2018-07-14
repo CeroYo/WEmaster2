@@ -92,7 +92,7 @@ app.delete("/sessions/:id", (request, response) => {
 	}
 	else {
 		Sessions.delete(id);
-		response.json(createSessionListResponseBody);
+		response.json(createSessionListResponseBody());
 	}
 });
 
@@ -103,7 +103,7 @@ app.post("/sessions", (request, response) => {
 		response.sendStatus(400);
 	}
 	else {
-		let id = Sessions.create(newSession.name, newSession.date, newSession.location, newSession.observingObject);
+		let id = Sessions.create(newSession.name, newSession.date, newSession.location, newSession.object);
 		response.location(`${BASE_URI}/sessions/${id}`).status(201).json(createSessionResponseBody(id));
 	}
 });
@@ -166,7 +166,7 @@ app.delete("/observingObjects/:id", (request, response) => {
 	}
 	else {
 		ObservingObjects.delete(id);
-		response.json(createObservingObjectListResponseBody);
+		response.json(createObservingObjectListResponseBody());
 	}
 });
 

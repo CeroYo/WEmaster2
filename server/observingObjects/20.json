@@ -1,0 +1,24 @@
+{
+    "observingObject": {
+        "session": {
+            "href": "http://localhost:8080/sessions/20"
+        },
+        "name": "oiu"
+    },
+    "_links": {
+        "self": {
+            "href": "http://localhost:8080/observingObjects/:id"
+        },
+        "list": {
+            "href": "http://localhost:8080/observingObjects"
+        },
+        "update": {
+            "method": "PUT",
+            "href": "http://localhost:8080/observingObjects/:id"
+        },
+        "delete": {
+            "method": "DELETE",
+            "href": "http://localhost:8080/observingObjects/:id"
+        }
+    }
+}
