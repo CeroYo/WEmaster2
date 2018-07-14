@@ -1,13 +1,5 @@
 {
-<<<<<<< HEAD
-    "id": 23,
-=======
-<<<<<<< HEAD
-    "id": 33,
-=======
-    "id": 29,
->>>>>>> 04885eece0de65d721ba8bffcda62fbcaf70f86e
->>>>>>> 5e6ea3cf8e2ddee20f61b7f8d6022052662b2fb4
+    "id": 25,
     "sessions": {
         "11": {
             "href": "http://localhost:8080/sessions/11"
@@ -32,6 +24,9 @@
         },
         "23": {
             "href": "http://localhost:8080/sessions/23"
+        },
+        "24": {
+            "href": "http://localhost:8080/sessions/24"
         },
         "25": {
             "href": "http://localhost:8080/sessions/25"

@@ -45,9 +45,17 @@
             "href": "http://localhost:8080/observingObjects/30",
             "sessionId": "26"
         },
+        "31": {
+            "href": "http://localhost:8080/observingObjects/31",
+            "sessionId": 23
+        },
         "32": {
             "href": "http://localhost:8080/observingObjects/32",
-            "sessionId": 31
+            "sessionId": 24
+        },
+        "33": {
+            "href": "http://localhost:8080/observingObjects/33",
+            "sessionId": "15"
         }
     }
 }
