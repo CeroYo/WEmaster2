@@ -92,7 +92,7 @@ app.delete("/sessions/:id", (request, response) => {
 	}
 	else {
 		Sessions.delete(id);
-		response.json(createSessionListResponseBody);
+		response.json(createSessionListResponseBody());
 	}
 });
 
@@ -166,7 +166,7 @@ app.delete("/observingObjects/:id", (request, response) => {
 	}
 	else {
 		ObservingObjects.delete(id);
-		response.json(createObservingObjectListResponseBody);
+		response.json(createObservingObjectListResponseBody());
 	}
 });
 

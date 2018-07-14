@@ -1,5 +1,5 @@
 {
-    "id": 23,
+    "id": 22,
     "sessions": {
         "0": {
             "href": "http://localhost:8080/sessions/0"
@@ -10,14 +10,8 @@
         "2": {
             "href": "http://localhost:8080/sessions/2"
         },
-        "3": {
-            "href": "http://localhost:8080/sessions/3"
-        },
         "4": {
             "href": "http://localhost:8080/sessions/4"
-        },
-        "5": {
-            "href": "http://localhost:8080/sessions/5"
         },
         "6": {
             "href": "http://localhost:8080/sessions/6"
@@ -69,6 +63,9 @@
         },
         "22": {
             "href": "http://localhost:8080/sessions/22"
+        },
+        "23": {
+            "href": "http://localhost:8080/sessions/23"
         }
     },
     "_links": {

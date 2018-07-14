@@ -80,11 +80,6 @@ for (let i = 0; i < table.rows.length; i++) {
 	table.rows[i].onclick = select;
 }
 
-//Sitzung löschen
-// document.getElementById("sitzung-loeschen").addEventListener("click", () => {
-// 	//
-// });
-
 //Sitzungseigenschaft bearbeiten
 document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 	let row = document.getElementById("table").rows[selectedNr];
@@ -213,7 +208,14 @@ function getObservingObjectNames(sessionId) {
 //Sitzung löschen
 document.getElementById("sitzung-loeschen").onclick = deleteSession;
 function deleteSession() {
-	console.log("bin hier");
+	let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+
+	//Request senden
+	let request = new XMLHttpRequest();
+	request.open("DELETE", BASE_URI + `sessions/${sessionId}`);
+	request.addEventListener("load", () => loadTable());
+	request.responseType = "json";
+	request.send();
 }
 
 ////Reihe hinzufügen Actionevent; HTML-Seite resetted nach 0,1sec wieder
