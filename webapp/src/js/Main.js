@@ -21,12 +21,11 @@ function loadTable(page) {
 
 	function createList(response) {
 		sessionsJSON = response.sessions;
+		console.log(sessionsJSON);
 
 		sessionsArr = [];
-		console.log(sessionsJSON);
 		for (let i = 0; i < Object.keys(sessionsJSON).length; i++) {
 			let keyValue = Object.keys(sessionsJSON)[i];
-			console.log(keyValue);
 			if (!sessionsJSON.hasOwnProperty(keyValue)) { continue; }
 			sessionsArr.push({ key: keyValue, json: sessionsJSON[keyValue] });
 		}
@@ -45,8 +44,7 @@ function loadTable(page) {
 		console.log(numberTableElements);
 		console.log(numberOfPages);
 		for (let i = (page - 1) * numberTableElements; (i < sessionsArr.length) && (i < page * numberTableElements); i++) {
-			let b = false;
-			console.log(i);
+			let b = true;
 			let request2 = new XMLHttpRequest();
 			request2.addEventListener("load", () => {
 				let row = document.createElement("tr");
@@ -61,22 +59,23 @@ function loadTable(page) {
 				row.appendChild(cell3);
 				row.addEventListener("click", select);
 				document.getElementById("table").appendChild(row);
-				b = true;
+				b = false;
+				console.log(request2.response.session.name + " hinzugefügt");
 			});
-			console.log(i);
-			console.log(sessionsArr[i].json.href);
 			request2.open("GET", sessionsArr[i].json.href);
 			request2.responseType = "json";
 			request2.send();
-			while (b) {
-				//warten
-				b = false;
-			}
+
+			let startTime = new Date().getTime();
+			let timeout = 50000000;
+			//while (b) {
+			//warten bis datei angekommen oder Timeout
+			//b = true;
+			//timeout -= (new Date().getTime() - startTime);
+			//console.log("time: " + timeout);
+			//}
 		}
 		createPaginationButton(numberOfPages);
-		for (let i = 0; i < table.rows.length; i++) {
-			table.rows[i].onclick = select;
-		}
 	}
 }
 
@@ -116,8 +115,7 @@ function setNewPage(i) {
 		return;
 	}
 	page = i;
-	console.log(selectedNr);
-	document.getElementById("table").rows[selectedNr].click();
+	//document.getElementById("table").rows[selectedNr].click();
 	loadTable(page);
 }
 
@@ -131,7 +129,7 @@ function select() {
 		selectedNr = this.rowIndex;
 		selected = true;
 		let sessionId = Object.keys(sessionsJSON)[(selectedNr - 1) + ((page - 1) * numberTableElements)];
-		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+		showSessionDetails(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].json.href, sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].key);
 	}
 	else if (this.id !== "th" && this.className === "" && selected === true) {
 		table.rows[selectedNr].className = "";
@@ -139,7 +137,7 @@ function select() {
 		selectedNr = this.rowIndex;
 		selected = true;
 		let sessionId = Object.keys(sessionsJSON)[(selectedNr - 1) + ((page - 1) * numberTableElements)];
-		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+		showSessionDetails(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].json.href, sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].key);
 	}
 	else if (this.id !== "th" && this.className !== "" && selected === true) {
 		this.className = "";
@@ -147,6 +145,10 @@ function select() {
 		selectedNr = 0;
 		hideSessionDetails();
 	}
+	console.log(selectedNr);
+	console.log((selectedNr - 1) + ((page - 1) * numberTableElements));
+	console.log(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].json.href);
+	console.log(sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].key);
 }
 
 //Sitzungseigenschaft bearbeiten
@@ -192,10 +194,6 @@ sitzungAnlegenBtn.addEventListener("click", () => {
 	let datumText = document.getElementById("datum").value;
 	let ortText = document.getElementById("ort").value;
 	let objectText = document.getElementById("objekt").value;
-
-	console.log(sitzungText);
-	console.log(datumText);
-	console.log(ortText);
 
 	//Request senden
 	let request = new XMLHttpRequest();
@@ -281,7 +279,10 @@ function deleteSession() {
 	//Request senden
 	let request = new XMLHttpRequest();
 	request.open("DELETE", BASE_URI + `sessions/${sessionId}`);
-	request.addEventListener("load", () => loadTable(page));
+	request.addEventListener("load", () => {
+		loadTable(page);
+		hideSessionDetails();
+	});
 	request.responseType = "json";
 	request.send();
 }
