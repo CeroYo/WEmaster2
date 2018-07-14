@@ -6,6 +6,7 @@ let sessionsArr = [];
 let page = 1;
 let numberOfPages = 1;
 let numberTableElements = 0;
+let selectedSession = {};
 
 document.onload = loadTable(page);
 
@@ -312,6 +313,9 @@ function showSessionDetails(sessionLink, sessionId) {
 		document.getElementById("sitzungsOrt").innerHTML = response.session.location;
 		document.getElementById("sitzungsanzeige").classList.remove("invisible");
 		document.getElementById("buttons").classList.remove("invisible");
+		selectedSession.name = response.session.name;
+		selectedSession.date = response.session.date;
+		selectedSession.location = response.session.location;
 	});
 	request.open("GET", sessionLink);
 	request.responseType = "json";
@@ -339,6 +343,7 @@ function getObservingObjectNames(sessionId) {
 	request.addEventListener("load", () => {
 		//Einzelne Objekte anfragen
 		let observingObjects = request.response.observingObjects;
+		let selectedObjects = [];
 		// if(document.getElementById("sitzungsObjekte").rows[0])
 		if (document.getElementById("sitzungsObjekte").innerHTML === "") {
 			let thead = document.createElement("thead");
@@ -359,6 +364,8 @@ function getObservingObjectNames(sessionId) {
 				request2.addEventListener("load", () => {
 					//Objekte html-Seite hinzufügen
 					let observingObject = request2.response.observingObject;
+					document.getElementById("sitzungsObjekte").innerHTML += observingObject.name + "<br/>";
+					selectedObjects.push(observingObject.name);
 					let row = document.createElement("tr");
 					let text = document.createElement("td");
 					text.innerHTML = observingObject.name;
@@ -372,6 +379,7 @@ function getObservingObjectNames(sessionId) {
 				request2.send();
 			}
 		}
+		selectedSession.observingObjects = selectedObjects;
 	});
 	request.open("GET", `${BASE_URI}observingObjects`);
 	request.responseType = "json";
@@ -393,3 +401,83 @@ function deleteSession() {
 	request.responseType = "json";
 	request.send();
 }
+
+//Karte anfragen
+document.getElementById("kartendienst").onclick = getMap;
+function getMap() {
+	//Dienst genutzt von nominatim.openstreetmap.org; https://wiki.openstreetmap.org/wiki/Nominatim
+	let country = "deutschland";
+	let ort = "";
+	let strasse = "";
+
+	//Ausgewählte Session
+	let request = new XMLHttpRequest();
+	request.addEventListener("load", () => {
+		let str = request.response.session.location;
+		let strarr = str.split(",");
+
+		if (strarr.length === 3) {
+			country = strarr[2];
+			strasse = strarr[1];
+		}
+		else if (strarr.length === 2) {
+			strasse = strarr[1];
+		}
+
+		let ort = strarr[0];
+
+		window.open(`https://nominatim.openstreetmap.org/search?country=${country}&city=${ort}&street=${strasse}`);
+	});
+	request.open("GET", sessionsArr[(selectedNr - 1) + ((page - 1) * numberTableElements)].json.href);
+	request.responseType = "json";
+	request.send();
+}
+
+//Drucken
+document.getElementById("sitzung-drucken").onclick = print;
+function print() {
+	console.log(selectedSession);
+	window.print();
+}
+
+////Reihe hinzufügen Actionevent; HTML-Seite resetted nach 0,1sec wieder
+// let anlegenBtn = document.getElementById("sitzung-anlegen");
+// anlegenBtn.onclick = function () {
+// 	let row = document.createElement("tr");
+// 	let cell = document.createElement("td");
+// 	cell.textContent = document.getElementById("sitzung").innerHTML;
+// 	row.appendChild(cell);
+// 	cell = document.createElement("td");
+// 	cell.textContent = document.getElementById("datum").innerHTML;
+// 	row.appendChild(cell);
+// 	cell = document.createElement("td");
+// 	cell.textContent = document.getElementById("ort").innerHTML;
+// 	row.appendChild(cell);
+// 	document.getElementById("table").appendChild(row);
+// };
+
+// Anderer Versuch für Selectioncolor
+// let table = document.getElementById("table");
+// let selected = false;
+// let selectedNr;
+
+// let select = function () {
+// 	if (this.style.backgroundColor !== "yellow" && selected === false) {
+// 		this.style.backgroundColor = "yellow";
+// 		selectedNr = this.rowIndex;
+// 		selected = true;
+// 	}
+// 	else if (this.style.backgroundColor !== "yellow" && selected === true) {
+// 		table.rows[selectedNr].style.backgroundColor = "";
+// 		this.style.backgroundColor = "yellow";
+// 		selectedNr = this.rowIndex;
+// 		selected = true;
+// 	}
+// 	else {
+// 		this.style.backgroundColor = "";
+// 		selected = false;
+// 	}
+// };
+// for (let i = 0; i < table.rows.length; i++) {
+// 	table.rows[i].onclick = select;
+// }

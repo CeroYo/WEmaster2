@@ -63,3 +63,25 @@ tr:hover td {
 .pagination-button-active {
 	background-color: #4169E1;
 }
+
+@media print {
+	.sitzungsliste {
+		.invisible;
+	}
+
+	.create-new {
+		.invisible;
+	}
+
+	.buttons {
+		.invisible;
+	}
+
+	.header {
+		.invisible;
+	}
+
+	#sitzungsanzeige {
+		display: inline !important;
+	}
+}
