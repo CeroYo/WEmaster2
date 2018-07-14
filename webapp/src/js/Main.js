@@ -36,7 +36,7 @@ function loadTable() {
 		//Tabellenhöhe
 		let docHeight = window.innerHeight - 100;
 		let numberTableElements = Math.round(docHeight / document.getElementById("th").clientHeight);
-		let numberOfPages = Object.keys(sessionsJSON).length;
+		let numberOfPages = Math.ceil(numberTableElements / sessionsArr.length);
 		console.log(document.body.clientHeight);
 		console.log(numberTableElements);
 		console.log(numberOfPages);
@@ -57,8 +57,6 @@ function loadTable() {
 					row.appendChild(cell3);
 					row.addEventListener("click", select);
 					document.getElementById("table").appendChild(row);
-					//document.createElement("<input type=\"button\" id=\"zurueck\" name=\"zurueck\" value=\"<\" class=\"pure-button pagination-button\" />");
-					//document.getElementById("table").parentElement.appendChild("<input type=\"button\" id=\"pageOne\" name=\"pageOne\" value=\"1\" class=\"pure-button pagination-button\" /><input type =\"button\" id=\"zurueck\" name=\"zurueck\" value=\">\" class=\"pure-button pagination-button\" />");
 				});
 				console.log(i);
 				console.log(sessionsArr[i].json.href);
@@ -68,7 +66,33 @@ function loadTable() {
 			}
 			count++;
 		}
+		createPaginationButton(numberOfPages);
 	}
+}
+
+function createPaginationButton(numberOfPages) {
+	let prev = document.createElement("input");
+	prev.setAttribute("type", "button");
+	prev.setAttribute("id", "zurueck");
+	prev.setAttribute("value", "<");
+	prev.setAttribute("class", "pure-button pagination-button");
+	document.getElementById("table").parentElement.appendChild(prev);
+
+	for (let i = 0; i < numberOfPages; i++) {
+		let btn = document.createElement("input");
+		btn.setAttribute("type", "button");
+		btn.setAttribute("id", `page${i}`);
+		btn.setAttribute("value", `${i}`);
+		btn.setAttribute("class", "pure-button pagination-button");
+		document.getElementById("table").parentElement.appendChild(btn);
+	}
+
+	let next = document.createElement("input");
+	next.setAttribute("type", "button");
+	next.setAttribute("id", "next");
+	next.setAttribute("value", ">");
+	next.setAttribute("class", "pure-button pagination-button");
+	document.getElementById("table").parentElement.appendChild(next);
 }
 
 // Selectioncolor; Funktioniert nicht bei Feldern mit vorher definierten Feldern
