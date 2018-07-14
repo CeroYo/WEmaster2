@@ -5,6 +5,7 @@ let sessionsJSON = {};
 let sessionsArr = [];
 let page = 1;
 let numberOfPages = 1;
+let numberTableElements = 0;
 
 document.onload = loadTable(page);
 
@@ -38,12 +39,13 @@ function loadTable(page) {
 
 		//Tabellenhöhe
 		let docHeight = window.innerHeight - 200;
-		let numberTableElements = Math.round(docHeight / document.getElementById("th").clientHeight);
+		numberTableElements = Math.round(docHeight / document.getElementById("th").clientHeight);
 		numberOfPages = Math.ceil(sessionsArr.length / numberTableElements);
 		console.log(document.body.clientHeight);
 		console.log(numberTableElements);
 		console.log(numberOfPages);
 		for (let i = (page - 1) * numberTableElements; (i < sessionsArr.length) && (i < page * numberTableElements); i++) {
+			let b = false;
 			console.log(i);
 			let request2 = new XMLHttpRequest();
 			request2.addEventListener("load", () => {
@@ -59,14 +61,22 @@ function loadTable(page) {
 				row.appendChild(cell3);
 				row.addEventListener("click", select);
 				document.getElementById("table").appendChild(row);
+				b = true;
 			});
 			console.log(i);
 			console.log(sessionsArr[i].json.href);
 			request2.open("GET", sessionsArr[i].json.href);
 			request2.responseType = "json";
 			request2.send();
+			while (b) {
+				//warten
+				b = false;
+			}
 		}
 		createPaginationButton(numberOfPages);
+		for (let i = 0; i < table.rows.length; i++) {
+			table.rows[i].onclick = select;
+		}
 	}
 }
 
@@ -106,6 +116,8 @@ function setNewPage(i) {
 		return;
 	}
 	page = i;
+	console.log(selectedNr);
+	document.getElementById("table").rows[selectedNr].click();
 	loadTable(page);
 }
 
@@ -118,7 +130,7 @@ function select() {
 		this.className += "select";
 		selectedNr = this.rowIndex;
 		selected = true;
-		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+		let sessionId = Object.keys(sessionsJSON)[(selectedNr - 1) + ((page - 1) * numberTableElements)];
 		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
 	}
 	else if (this.id !== "th" && this.className === "" && selected === true) {
@@ -126,7 +138,7 @@ function select() {
 		this.className += "select";
 		selectedNr = this.rowIndex;
 		selected = true;
-		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+		let sessionId = Object.keys(sessionsJSON)[(selectedNr - 1) + ((page - 1) * numberTableElements)];
 		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
 	}
 	else if (this.id !== "th" && this.className !== "" && selected === true) {
@@ -135,9 +147,6 @@ function select() {
 		selectedNr = 0;
 		hideSessionDetails();
 	}
-}
-for (let i = 0; i < table.rows.length; i++) {
-	table.rows[i].onclick = select;
 }
 
 //Sitzungseigenschaft bearbeiten
