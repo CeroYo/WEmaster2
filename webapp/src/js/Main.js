@@ -19,11 +19,11 @@ function loadTable(page) {
 	request.open("GET", BASE_URI + "sessions");
 	request.responseType = "json";
 	request.send();
-	if (!document.getElementById("sitzungsanzeige").classList.contains("invisible")) {
-		let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
-		hideSessionDetails();
-		showSessionDetails(sessionsJSON[sessionId].href, sessionId);
-	}
+	// if (!document.getElementById("sitzungsanzeige").classList.contains("invisible")) {
+	// 	let sessionId = Object.keys(sessionsJSON)[selectedNr - 1];
+	// 	hideSessionDetails();
+	// 	showSessionDetails(sessionsJSON[sessionId].href, sessionId);
+	// }
 	function createList(response) {
 		sessionsJSON = response.sessions;
 		console.log(sessionsJSON);
@@ -125,10 +125,11 @@ function setNewPage(i) {
 }
 
 // Selectioncolor; Funktioniert nicht bei Feldern mit vorher definierten Feldern
-let table = document.getElementById("table");
+
 let selected = false;
 let selectedNr;
 function select() {
+	let table = document.getElementById("table");
 	if (this.id !== "th" && this.className === "" && selected === false) {
 		this.className += "select";
 		selectedNr = this.rowIndex;
@@ -188,19 +189,17 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 	document.getElementById("editSitzung").value = document.getElementById("sitzungsName").innerHTML;
 	document.getElementById("editDatum").value = document.getElementById("sitzungsDatum").innerHTML;
 	document.getElementById("editOrt").value = document.getElementById("sitzungsOrt").innerHTML;
-	document.getElementById("editObjekt").value = document.getElementById("sitzungsObjekte").innerHTML;
 	btn1.addEventListener("click", btn1Event);
 	function btn1Event() {
 		let nr = Object.keys(sessionsJSON)[selectedNr - 1];
 		let sitzungText = document.getElementById("editSitzung").value;
 		let datumText = document.getElementById("editDatum").value;
 		let ortText = document.getElementById("editOrt").value;
-		let objectText = document.getElementById("editObjekt").value;
 		let request = new XMLHttpRequest();
 		request.addEventListener("load", () => { console.log(""); });
 		request.open("PUT", BASE_URI + `sessions/${nr}`);
 		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		request.send(`name=${sitzungText}&date=${datumText}&location=${ortText}&object=${objectText}`);
+		request.send(`name=${sitzungText}&date=${datumText}&location=${ortText}`);
 
 		hide();
 		loadTable(page);
@@ -212,13 +211,13 @@ document.getElementById("sitzung-bearbeiten").addEventListener("click", () => {
 		document.getElementById("editSitzung").value = "";
 		document.getElementById("editDatum").value = "";
 		document.getElementById("editOrt").value = "";
-		document.getElementById("editObjekt").value = "";
 		hide();
 	}
 	function hide() {
 		document.getElementById("editForm").classList.add("invisible");
 		btn1.removeEventListener("click", btn1Event);
 		btn2.removeEventListener("click", btn2Event);
+		hideSessionDetails();
 	}
 });
 
@@ -364,7 +363,6 @@ function getObservingObjectNames(sessionId) {
 				request2.addEventListener("load", () => {
 					//Objekte html-Seite hinzufügen
 					let observingObject = request2.response.observingObject;
-					document.getElementById("sitzungsObjekte").innerHTML += observingObject.name + "<br/>";
 					selectedObjects.push(observingObject.name);
 					let row = document.createElement("tr");
 					let text = document.createElement("td");
@@ -372,7 +370,6 @@ function getObservingObjectNames(sessionId) {
 					row.appendChild(text);
 					row.addEventListener("click", selectObj);
 					document.getElementById("sitzungsObjekte").appendChild(row);
-					// document.getElementById("sitzungsObjekte").innerHTML += observingObject.name + "<br/>";
 				});
 				request2.open("GET", href);
 				request2.responseType = "json";
